@@ -44,7 +44,10 @@ export function ScoreBar({
       const blocks = te.filter(e => e.action === 'block')
       const receptions = te.filter(e => e.action === 'reception')
 
+      const receptionGood = receptions.filter(e => e.result === 'success').length
+
       return {
+        serveTotal: serves.length,
         aces: serves.filter(e => e.result === 'success').length,
         servePressure: serves.filter(e => e.meta?.quality === 'pressure').length,
         serveErrors: serves.filter(e => e.result === 'error').length,
@@ -52,8 +55,10 @@ export function ScoreBar({
         attackMinus: attacks.filter(e => e.result === 'error').length,
         blockPlus: blocks.filter(e => e.result === 'success').length,
         blockMinus: blocks.filter(e => e.result === 'error').length,
+        receptionTotal: receptions.length,
+        receptionGood,
         receptionPct: receptions.length > 0
-          ? Math.round((receptions.filter(e => e.result === 'success').length / receptions.length) * 100)
+          ? Math.round((receptionGood / receptions.length) * 100)
           : null,
       }
     }
@@ -124,12 +129,14 @@ export function ScoreBar({
       <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 pb-2 text-[11px] tabular-nums">
         {/* Подача */}
         <div className="flex justify-end gap-1.5">
+          <span className="text-text-muted/60">{stats.home.serveTotal}</span>
           <span className="text-success">{stats.home.aces}э</span>
           <span className="text-text-muted">{stats.home.servePressure}у</span>
           <span className="text-error">{stats.home.serveErrors}о</span>
         </div>
         <span className="text-[10px] text-text-muted/60 font-medium">Под</span>
         <div className="flex gap-1.5">
+          <span className="text-text-muted/60">{stats.away.serveTotal}</span>
           <span className="text-success">{stats.away.aces}э</span>
           <span className="text-text-muted">{stats.away.servePressure}у</span>
           <span className="text-error">{stats.away.serveErrors}о</span>
@@ -158,15 +165,15 @@ export function ScoreBar({
         </div>
 
         {/* Приём */}
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-1.5">
           <span className={stats.home.receptionPct !== null ? 'text-primary' : 'text-text-muted/40'}>
-            {stats.home.receptionPct !== null ? `${stats.home.receptionPct}%` : '—'}
+            {stats.home.receptionPct !== null ? `${stats.home.receptionGood}/${stats.home.receptionTotal} ${stats.home.receptionPct}%` : '—'}
           </span>
         </div>
         <span className="text-[10px] text-text-muted/60 font-medium">Пр</span>
-        <div className="flex">
+        <div className="flex gap-1.5">
           <span className={stats.away.receptionPct !== null ? 'text-warning' : 'text-text-muted/40'}>
-            {stats.away.receptionPct !== null ? `${stats.away.receptionPct}%` : '—'}
+            {stats.away.receptionPct !== null ? `${stats.away.receptionGood}/${stats.away.receptionTotal} ${stats.away.receptionPct}%` : '—'}
           </span>
         </div>
       </div>

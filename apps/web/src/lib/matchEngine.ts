@@ -162,9 +162,15 @@ export function shouldLiberoSwapOut(
   return isFrontRow(liberoEntry.zone)
 }
 
-/** Get back-row players eligible for libero replacement (excluding zone 1 = server). */
-export function getLiberoEligiblePlayers(lineup: LineupEntry[]): LineupEntry[] {
-  return lineup.filter((e) => isBackRow(e.zone) && e.zone !== 1 && !e.isLibero)
+/** Get back-row players eligible for libero replacement.
+ *  Zone 1 excluded only when our team is serving (libero cannot serve).
+ *  When opponent is serving, zones 1, 5, 6 are all available. */
+export function getLiberoEligiblePlayers(lineup: LineupEntry[], isTeamServing: boolean = true): LineupEntry[] {
+  return lineup.filter((e) => {
+    if (!isBackRow(e.zone) || e.isLibero) return false
+    if (e.zone === 1 && isTeamServing) return false
+    return true
+  })
 }
 
 /**
@@ -603,6 +609,7 @@ export function getAwayAvailableActions(
             title: 'Подача',
             actions: [
               { action: 'serve', result: 'success', quality: 'ace', label: 'Эйс', variant: 'success' },
+              { action: 'serve', result: 'neutral', quality: 'pressure', label: 'Услож', variant: 'neutral' },
               { action: 'serve', result: 'neutral', quality: 'in_play', label: 'В игру', variant: 'neutral' },
               { action: 'serve', result: 'error', quality: 'serve_error', label: 'Ошиб', variant: 'error' },
             ],

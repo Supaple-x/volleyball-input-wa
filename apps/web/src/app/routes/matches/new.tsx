@@ -248,7 +248,7 @@ export function NewMatchPage() {
   const [homeTeamId, setHomeTeamId] = useState('')
   const [awayTeamId, setAwayTeamId] = useState('')
   const [homeLineup, setHomeLineup] = useState<LineupState>(EMPTY_LINEUP)
-  const [servingTeam, setServingTeam] = useState<'home' | 'away'>('home')
+  const [servingTeam, setServingTeam] = useState<'home' | 'away' | null>(null)
   const [pickerZone, setPickerZone] = useState<CourtZone | null>(null)
 
   const homeTeam = teams.find((t) => t.id === homeTeamId)
@@ -262,7 +262,7 @@ export function NewMatchPage() {
   }, [homeLineup])
 
   const homeLineupCount = Object.keys(homeLineup.zones).length
-  const canStart = homeTeamId !== '' && awayTeamId !== '' && homeLineupCount === 6
+  const canStart = homeTeamId !== '' && awayTeamId !== '' && homeLineupCount === 6 && servingTeam !== null
 
   const handleZoneTap = (zone: CourtZone) => {
     setPickerZone(zone)
@@ -393,11 +393,14 @@ export function NewMatchPage() {
 
       {homeTeamId && awayTeamId && homeTeam && awayTeam && (
         <>
-          {/* Serving Team Selector */}
+          {/* Step 1: Serving Team Selector */}
           <div className="mb-6">
-            <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
-              Первая подача
-            </h3>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">1</span>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                Кто подаёт первым?
+              </h3>
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setServingTeam('home')}
@@ -426,30 +429,32 @@ export function NewMatchPage() {
             </div>
           </div>
 
-          {/* Home Team Lineup */}
-          <div className="mb-6">
-            <div className="mb-3 flex items-center gap-2">
-              <Shield className="h-4 w-4 text-primary" />
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
-                {homeTeam.name}
-              </h2>
-              <span className="ml-auto text-xs text-text-muted">
-                {homeLineupCount}/{VOLLEYBALL_RULES.PLAYERS_ON_COURT}
-              </span>
+          {/* Step 2: Home Team Lineup (only after serving team chosen) */}
+          {servingTeam !== null && (
+            <div className="mb-6">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">2</span>
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
+                  Расстановка — {homeTeam.name}
+                </h2>
+                <span className="ml-auto text-xs text-text-muted">
+                  {homeLineupCount}/{VOLLEYBALL_RULES.PLAYERS_ON_COURT}
+                </span>
+              </div>
+              <CourtGrid
+                team={homeTeam}
+                lineup={homeLineup}
+                onZoneTap={handleZoneTap}
+                onClearZone={handleClearZone}
+                accentColor="primary"
+              />
+              <LiberoSelector
+                team={homeTeam}
+                selectedIds={homeLineup.liberoIds}
+                onSelect={handleLiberoSelect}
+              />
             </div>
-            <CourtGrid
-              team={homeTeam}
-              lineup={homeLineup}
-              onZoneTap={handleZoneTap}
-              onClearZone={handleClearZone}
-              accentColor="primary"
-            />
-            <LiberoSelector
-              team={homeTeam}
-              selectedIds={homeLineup.liberoIds}
-              onSelect={handleLiberoSelect}
-            />
-          </div>
+          )}
         </>
       )}
 

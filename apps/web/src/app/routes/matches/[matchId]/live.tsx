@@ -131,11 +131,13 @@ function getLiberoReplacements(match: Match): Record<string, string> {
 function LiberoControl({
   match,
   homeTeam,
+  isHomeServing,
   onSwapIn,
   onSwapOut,
 }: {
   match: Match
   homeTeam: Team | undefined
+  isHomeServing: boolean
   onSwapIn: (liberoId: string, replacedPlayerId: string) => void
   onSwapOut: (liberoId: string) => void
 }) {
@@ -145,12 +147,16 @@ function LiberoControl({
   if (liberoIds.length === 0 || !homeTeam) return null
 
   const replacements = getLiberoReplacements(match)
-  const eligiblePlayers = getLiberoEligiblePlayers(match.homeLineup)
+  const eligiblePlayers = getLiberoEligiblePlayers(match.homeLineup, isHomeServing)
     .map((entry) => ({
       entry,
       player: homeTeam.players.find((p) => p.id === entry.playerId),
     }))
     .filter(({ player }) => !!player)
+
+  // Только один либеро может быть на площадке одновременно
+  const anotherLiberoOnCourt = (currentId: string) =>
+    liberoIds.some((id) => id !== currentId && match.homeLineup.some((e) => e.playerId === id))
 
   return (
     <div className="mx-3 space-y-2">
@@ -159,6 +165,7 @@ function LiberoControl({
         if (!liberoPlayer) return null
 
         const isOnCourt = match.homeLineup.some((e) => e.playerId === liberoId)
+        const isBlocked = !isOnCourt && anotherLiberoOnCourt(liberoId)
         const showPicker = pickerForLibero === liberoId
 
         return (
@@ -184,6 +191,10 @@ function LiberoControl({
                 >
                   Убрать
                 </button>
+              ) : isBlocked ? (
+                <span className="px-3 py-1.5 text-[11px] text-text-muted">
+                  Другой либеро на площадке
+                </span>
               ) : (
                 <button
                   onClick={() => setPickerForLibero(showPicker ? null : liberoId)}
@@ -545,6 +556,7 @@ export function LiveMatchPage() {
         <LiberoControl
           match={match}
           homeTeam={homeTeam}
+          isHomeServing={servingTeamId === match.homeTeamId}
           onSwapIn={handleLiberoIn}
           onSwapOut={handleLiberoOut}
         />
