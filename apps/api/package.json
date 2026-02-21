@@ -1,0 +1,22 @@
+{
+  "name": "@volleystats/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@volleystats/shared": "workspace:*",
+    "hono": "^4.7.0",
+    "@hono/node-server": "^1.13.0",
+    "better-sqlite3": "^11.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/better-sqlite3": "^7.6.0",
+    "tsx": "^4.19.0"
+  }
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VolleyStats - Главный экран</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Lexend -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#3780f6",
+              "background-light": "#f5f7f8",
+              "background-dark": "#0F1923", // Requested deep dark background
+              "surface-dark": "#1a242f",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem", 
+              "lg": "1rem", 
+              "xl": "1.5rem", 
+              "2xl": "2rem",
+              "full": "9999px"
+            },
+            boxShadow: {
+                'glow': '0 0 20px -5px rgba(55, 128, 246, 0.5)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom Scrollbar Hide */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(26, 36, 47, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #3780f6, #60a5fa);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200 antialiased min-h-screen pb-24">
+<!-- Top Header -->
+<header class="pt-12 pb-4 px-6 flex justify-between items-center sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200/10 dark:border-white/5">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white shadow-glow">
+<span class="material-icons-round text-lg transform -rotate-12">sports_volleyball</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">VolleyStats</h1>
+</div>
+<button class="relative p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
+<img alt="User Profile" class="w-8 h-8 rounded-full object-cover border-2 border-primary/50" data-alt="User profile avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8umbxZYJy4ryMFDspJXvJ3OWsbzlkg4gGGA7y-E5hmLHeeCMDOLRDlG74CVy1J8hRxCCwOFqVlS_3_6sOyv5-ilcmTGWYmWy31WL34wxHZQWd4skf8dIWjKBARDGDij_qI361yYVsYZ-CPMH6NDJUgkel6Bqg0ozVbmKXwMOmwcmjeKyUjUhAr52APePiZKN3a7QpAkK0SuqfycagcqGIlSItsZFpRX_YjnUG7-3BAc8nq663Xg-I7uW-mXy6yP0lAJ1XdMKpGvw"/>
+<span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-background-dark rounded-full"></span>
+</button>
+</header>
+<main class="px-5 pt-6 space-y-8">
+<!-- Hero Section: Quick Start -->
+<section class="relative overflow-hidden rounded-2xl glass-panel p-6 shadow-2xl shadow-primary/5">
+<!-- Decorative blurred blobs -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="text-2xl font-bold text-white mb-1">Новый матч</h2>
+<p class="text-slate-400 text-sm">Готовы к игре?</p>
+</div>
+<div class="bg-primary/10 p-2 rounded-lg">
+<span class="material-icons-round text-primary text-2xl">add_circle_outline</span>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-blue-600 active:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl shadow-glow shadow-primary/30 transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 group">
+<span class="material-icons-round group-hover:animate-pulse">play_arrow</span>
+                    Начать матч
+                </button>
+<div class="mt-4 flex items-center justify-center gap-6">
+<button class="flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-white transition-colors">
+<span class="material-icons-round text-base">history</span>
+                        История
+                    </button>
+<div class="w-px h-3 bg-white/10"></div>
+<button class="flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-white transition-colors">
+<span class="material-icons-round text-base">settings</span>
+                        Настройки
+                    </button>
+</div>
+</div>
+</section>
+<!-- Recent Matches Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-white">Последние матчи</h3>
+<a class="text-xs text-primary font-medium hover:text-blue-400 transition-colors" href="#">Все</a>
+</div>
+<div class="space-y-4">
+<!-- Match Card 1 -->
+<div class="glass-card rounded-xl p-4 relative group hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-500/10 text-green-400 border border-green-500/20">Завершён</span>
+<span class="text-xs text-slate-500">Сегодня, 18:30</span>
+</div>
+<span class="material-icons-round text-slate-600 text-sm">more_horiz</span>
+</div>
+<div class="flex items-center justify-between gap-4 mb-4">
+<div class="flex-1 flex flex-col items-center text-center">
+<div class="w-12 h-12 mb-2 rounded-full bg-slate-800 flex items-center justify-center border border-white/5">
+<span class="font-bold text-lg text-white">IT</span>
+</div>
+<span class="text-sm font-semibold text-slate-200 line-clamp-1">INEX TEAM</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-3xl font-display font-bold text-white tracking-widest">3:0</span>
+<span class="text-[10px] text-slate-500 uppercase mt-1">Счёт</span>
+</div>
+<div class="flex-1 flex flex-col items-center text-center">
+<div class="w-12 h-12 mb-2 rounded-full bg-red-900/20 flex items-center justify-center border border-white/5">
+<span class="font-bold text-lg text-red-400">KO</span>
+</div>
+<span class="text-sm font-semibold text-slate-200 line-clamp-1">Комус</span>
+</div>
+</div>
+<div class="flex justify-center gap-2">
+<span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 font-mono">25:16</span>
+<span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 font-mono">27:25</span>
+<span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 font-mono">25:19</span>
+</div>
+</div>
+<!-- Match Card 2 -->
+<div class="glass-card rounded-xl p-4 relative group hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-700/30 text-slate-400 border border-slate-600/20">Вчера</span>
+<span class="text-xs text-slate-500">14:00</span>
+</div>
+</div>
+<div class="flex items-center justify-between gap-4 mb-4">
+<div class="flex-1 flex flex-col items-center text-center">
+<div class="w-10 h-10 mb-2 rounded-full bg-blue-900/20 flex items-center justify-center border border-white/5">
+<span class="font-bold text-sm text-blue-400">ZE</span>
+</div>
+<span class="text-sm font-medium text-slate-300 line-clamp-1">Зенит</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-2xl font-display font-bold text-slate-300 tracking-widest">1:3</span>
+</div>
+<div class="flex-1 flex flex-col items-center text-center">
+<div class="w-10 h-10 mb-2 rounded-full bg-indigo-900/20 flex items-center justify-center border border-white/5">
+<span class="font-bold text-sm text-indigo-400">DY</span>
+</div>
+<span class="text-sm font-medium text-slate-300 line-clamp-1">Динамо</span>
+</div>
+</div>
+<div class="flex justify-center gap-2">
+<span class="px-2 py-1 rounded bg-slate-800/50 text-[10px] text-slate-500 font-mono">21:25</span>
+<span class="px-2 py-1 rounded bg-slate-800/50 text-[10px] text-slate-500 font-mono">25:22</span>
+<span class="px-2 py-1 rounded bg-slate-800/50 text-[10px] text-slate-500 font-mono">18:25</span>
+<span class="px-2 py-1 rounded bg-slate-800/50 text-[10px] text-slate-500 font-mono">20:25</span>
+</div>
+</div>
+</div>
+</section>
+<!-- My Teams Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-white">Мои команды</h3>
+<button class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+<span class="material-icons-round text-primary text-sm">add</span>
+</button>
+</div>
+<!-- Horizontal Scroll Container -->
+<div class="flex overflow-x-auto gap-4 pb-4 -mx-5 px-5 scrollbar-hide snap-x snap-mandatory">
+<!-- Team Card 1 -->
+<div class="snap-center shrink-0 w-40 glass-card rounded-xl p-4 flex flex-col items-center justify-center hover:border-primary/30 transition-colors">
+<div class="relative mb-3">
+<img alt="Team Logo Spartak" class="w-16 h-16 rounded-full object-cover border-2 border-red-500/20" data-alt="Red sports team emblem on jersey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrZ-DqH3T6fAaNgHtYncULg693bfUFGku-cKToIg0jBeiZzAG9H7ZMAa6sy_sR-LXr7MBA2Ztli_GnDfKeAFhpWpCfyZKEScyYeXTQydcIYw6zWf1dqNODY6CVlrfrt5PMciGB-pJNeRnDBGoRgarrSJuo2X1REkv5SyTDJJGm6v-vcaRp_qzQFIdEYFogffGOVY1VHzQf4v-I-Eg7N_gR0mvNYLK7dHxs3FZWlc4UZYV962vmQksYw7iinTr_R38Hp9NuW_7WQpA"/>
+</div>
+<h4 class="text-white font-semibold text-sm mb-1">Спартак</h4>
+<span class="text-xs text-slate-500">12 игроков</span>
+</div>
+<!-- Team Card 2 -->
+<div class="snap-center shrink-0 w-40 glass-card rounded-xl p-4 flex flex-col items-center justify-center hover:border-primary/30 transition-colors">
+<div class="relative mb-3">
+<div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/20">
+                            IT
+                        </div>
+</div>
+<h4 class="text-white font-semibold text-sm mb-1">INEX TEAM</h4>
+<span class="text-xs text-slate-500">8 игроков</span>
+</div>
+<!-- Team Card 3 -->
+<div class="snap-center shrink-0 w-40 glass-card rounded-xl p-4 flex flex-col items-center justify-center hover:border-primary/30 transition-colors">
+<div class="relative mb-3">
+<img alt="Team Logo VolleyPro" class="w-16 h-16 rounded-full object-cover border-2 border-yellow-500/20" data-alt="Abstract yellow volleyball pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_zopVqzDOExVb-NzKoVv91hfmaWOUZy3pS02F1aPEsFYt0ONVKWQMiedXMac4DMSt3iSL5-gfTj7djyyYHJuxa1P4FmS5XXR68RrQwNgEU1noCyhbgdn2GdfrE2p4FtwQDmCRBG9Qep6wjef6xInhMcdIlLohGa0T_yrUkbAgxx7jOJQFjvnvSjV64fWfxNDcsLBXel3Y9QLnM9GDbQKxxbN-jPQh-rgPIv4nwL6fj63L55rQ3KYjpSY9GwHF0lA7Qu6uTvOhFtg"/>
+</div>
+<h4 class="text-white font-semibold text-sm mb-1">VolleyPro</h4>
+<span class="text-xs text-slate-500">14 игроков</span>
+</div>
+<!-- Add Team Card -->
+<div class="snap-center shrink-0 w-40 rounded-xl border border-dashed border-white/10 p-4 flex flex-col items-center justify-center hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-3 group-hover:bg-primary/20 group-hover:text-primary transition-all">
+<span class="material-icons-round text-slate-400 group-hover:text-primary">group_add</span>
+</div>
+<span class="text-xs text-slate-400 font-medium">Создать</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full glass-panel border-t border-white/5 pb-safe pt-2 px-6 z-40 rounded-t-2xl">
+<div class="flex justify-between items-center max-w-lg mx-auto h-16">
+<a class="flex flex-col items-center gap-1 w-12 group" href="#">
+<span class="material-icons-round text-primary text-2xl group-hover:scale-110 transition-transform">dashboard</span>
+<span class="text-[10px] font-medium text-primary">Главная</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-12 group" href="#">
+<span class="material-icons-round text-slate-500 group-hover:text-slate-300 transition-colors text-2xl">groups</span>
+<span class="text-[10px] font-medium text-slate-500 group-hover:text-slate-300">Команды</span>
+</a>
+<!-- Floating Action Button effect for center item -->
+<div class="-mt-8">
+<button class="w-14 h-14 rounded-full bg-primary shadow-glow shadow-primary/40 flex items-center justify-center text-white transform hover:scale-105 transition-all">
+<span class="material-icons-round text-2xl">sports_volleyball</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 w-12 group" href="#">
+<span class="material-icons-round text-slate-500 group-hover:text-slate-300 transition-colors text-2xl">bar_chart</span>
+<span class="text-[10px] font-medium text-slate-500 group-hover:text-slate-300">Статы</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-12 group" href="#">
+<span class="material-icons-round text-slate-500 group-hover:text-slate-300 transition-colors text-2xl">person</span>
+<span class="text-[10px] font-medium text-slate-500 group-hover:text-slate-300">Профиль</span>
+</a>
+</div>
+<!-- Safe area spacing for iOS home indicator -->
+<div class="h-5 w-full"></div>
+</nav>
+</body></html>

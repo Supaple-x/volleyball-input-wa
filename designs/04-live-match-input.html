@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>VolleyStats - Запись матча</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0F1923", /* Overridden to match prompt specific dark shade */
+                        "success": "#10B981",
+                        "danger": "#EF4444",
+                        "neutral-surface": "#1F2937",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(60, 131, 246, 0.5)',
+                        'neon-green': '0 0 10px rgba(16, 185, 129, 0.4)',
+                        'neon-red': '0 0 10px rgba(239, 68, 68, 0.4)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean app-like feel */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        /* Safe area handling for iOS PWA */
+        .safe-top {
+            padding-top: env(safe-area-inset-top);
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .glass-panel {
+            background: rgba(15, 25, 35, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .court-grid {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 100% 33.33%, 33.33% 100%;
+            background-position: 0 0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white font-display h-screen flex flex-col overflow-hidden selection:bg-primary/30">
+<!-- Sticky Top Bar (Scoreboard) -->
+<header class="glass-panel sticky top-0 z-50 safe-top shadow-lg">
+<div class="px-4 py-3 pb-4">
+<!-- Set Indicator -->
+<div class="flex justify-center mb-2">
+<span class="bg-primary/20 text-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-neon">Сет 3</span>
+</div>
+<!-- Teams & Score -->
+<div class="flex items-center justify-between">
+<!-- Team 1 -->
+<div class="flex flex-col items-center w-1/3">
+<div class="w-12 h-12 rounded-full bg-white/10 p-1 mb-1 border border-white/10 relative overflow-hidden">
+<img alt="Logo INEX Team" class="w-full h-full rounded-full object-cover" data-alt="INEX Team Logo abstract blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6wBgTRKutfGJ_GmPF76Ul5D7eAiQaXpVmtyZLgKwzGvxsX7_97StLI7d0sp609Bb-fqNRX5XrOfuYhaUR94GHY1Y0XZ6Pj8GIEsHOp3BxM-D2Hj4L1E-bm0R53tGQ1JXWGKs_OVM7X99emFNLfNqemmfg4yVs_Igi53uZE4mLXoFIAo2gOWHTbIej3VuUFbslxMTQ4bZU_W1-xXmowvQAhlBHAd4sbnTvj8CHBnEOuaH-Ran8-Xrx5cVdw8HgV4h9wo8PmmTPJpA"/>
+</div>
+<span class="text-xs font-semibold text-gray-300 truncate max-w-full">INEX TEAM</span>
+<div class="flex gap-1 mt-1">
+<span class="w-4 h-4 flex items-center justify-center bg-gray-700 rounded text-[10px] text-gray-400">T:1</span>
+<span class="w-4 h-4 flex items-center justify-center bg-gray-700 rounded text-[10px] text-gray-400">S:2</span>
+</div>
+</div>
+<!-- Score -->
+<div class="flex flex-col items-center w-1/3">
+<div class="text-4xl font-bold tracking-tighter text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] tabular-nums">
+                        25<span class="text-gray-500 mx-1">:</span>22
+                    </div>
+<div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1 font-bold">Live</div>
+</div>
+<!-- Team 2 -->
+<div class="flex flex-col items-center w-1/3">
+<div class="w-12 h-12 rounded-full bg-white/10 p-1 mb-1 border border-white/10 relative overflow-hidden">
+<img alt="Logo Komus" class="w-full h-full rounded-full object-cover" data-alt="Komus Team Logo abstract red" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA420AFIE_GwHRLMQjUbeR1tb410PIzXuiw3B6PwuABxIoqGoodFmBcKqtVRSI8lSbjSKFvr_WhApDQzk7sfMcmHkoEhlfofxg7RuJjUQLAmD6H-d-T1JW2hV4sR8Bzq-9Se4DAF9rSmjl7jYVTKW-ERYrYR5XhURxdrA5iE9MvjSn-pkcacAcVsbwPK6htLtmK7YqsbooCyvuQ6xUjZXWFGDkF3XYn1scqeR_WyRX3pkxEixz5LGlrXWmGsEHap4i-ySUt3SJJ1fU"/>
+</div>
+<span class="text-xs font-semibold text-gray-300 truncate max-w-full">Комус</span>
+<div class="flex gap-1 mt-1">
+<span class="w-4 h-4 flex items-center justify-center bg-gray-700 rounded text-[10px] text-gray-400">T:2</span>
+<span class="w-4 h-4 flex items-center justify-center bg-gray-700 rounded text-[10px] text-gray-400">S:4</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Scrollable Content Area -->
+<main class="flex-1 overflow-y-auto px-4 py-4 pb-32"> <!-- Added pb-32 for bottom bar clearance -->
+<!-- Team Toggle -->
+<div class="flex bg-gray-800/50 p-1 rounded-xl mb-6 border border-white/5">
+<button class="flex-1 py-2 px-4 rounded-lg bg-primary text-white font-semibold text-sm shadow-lg shadow-primary/20 transition-all">
+                Наша команда
+            </button>
+<button class="flex-1 py-2 px-4 rounded-lg text-gray-400 font-medium text-sm hover:text-white transition-colors">
+                Соперник
+            </button>
+</div>
+<!-- Court Visualization -->
+<div class="relative w-full aspect-[1.5/1] bg-[#1a2634] rounded-xl border-2 border-white/10 overflow-hidden mb-6 shadow-2xl">
+<!-- Net Line -->
+<div class="absolute top-0 w-full h-1 bg-white/20 z-10"></div>
+<!-- 3 Meter Line -->
+<div class="absolute top-1/3 w-full h-px bg-white/20 border-t border-dashed border-white/30 z-0"></div>
+<!-- Court Grid & Players -->
+<div class="w-full h-full p-4 relative z-10">
+<!-- Front Row -->
+<div class="grid grid-cols-3 gap-4 h-1/2 items-center justify-items-center pb-2 border-b border-white/5">
+<button class="w-12 h-12 rounded-full bg-gray-700 text-white font-bold text-lg flex items-center justify-center border-2 border-transparent hover:border-primary active:scale-95 transition-all">9</button>
+<button class="w-14 h-14 rounded-full bg-primary text-white font-bold text-xl flex items-center justify-center shadow-neon ring-2 ring-white/20 active:scale-95 transition-all z-20">17</button>
+<button class="w-12 h-12 rounded-full bg-gray-700 text-white font-bold text-lg flex items-center justify-center border-2 border-transparent hover:border-primary active:scale-95 transition-all">5</button>
+</div>
+<!-- Back Row -->
+<div class="grid grid-cols-3 gap-4 h-1/2 items-center justify-items-center pt-2">
+<button class="w-12 h-12 rounded-full bg-gray-700 text-white font-bold text-lg flex items-center justify-center border-2 border-transparent hover:border-primary active:scale-95 transition-all">24</button>
+<button class="w-12 h-12 rounded-full bg-gray-700 text-white font-bold text-lg flex items-center justify-center border-2 border-transparent hover:border-primary active:scale-95 transition-all">6</button>
+<button class="w-12 h-12 rounded-full bg-gray-700 text-white font-bold text-lg flex items-center justify-center border-2 border-transparent hover:border-primary active:scale-95 transition-all">1</button>
+</div>
+</div>
+<!-- Libero Toggle -->
+<div class="absolute bottom-2 right-2 z-20">
+<div class="flex items-center bg-black/40 backdrop-blur-md rounded-full pl-3 pr-1 py-1 border border-white/10">
+<span class="text-[10px] uppercase font-bold text-gray-300 mr-2">Либеро</span>
+<button class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+<span class="material-icons-round text-sm">cached</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Command Center -->
+<div class="space-y-4">
+<!-- Row 1: Attack -->
+<div class="grid grid-cols-[1fr_auto] gap-3">
+<div class="bg-gray-800/40 rounded-xl p-3 flex flex-col justify-between border border-white/5">
+<span class="text-xs uppercase text-gray-400 font-bold mb-2 ml-1">Атака</span>
+<div class="grid grid-cols-3 gap-2">
+<button class="h-12 bg-success/20 hover:bg-success text-success hover:text-white rounded-lg flex items-center justify-center border border-success/30 transition-all active:scale-95">
+<span class="material-icons-round">add</span>
+</button>
+<button class="h-12 bg-danger/20 hover:bg-danger text-danger hover:text-white rounded-lg flex items-center justify-center border border-danger/30 transition-all active:scale-95">
+<span class="material-icons-round">remove</span>
+</button>
+<button class="h-12 bg-gray-700/50 hover:bg-gray-600 text-gray-300 rounded-lg flex items-center justify-center border border-gray-600/30 transition-all active:scale-95 font-bold">
+                            0
+                        </button>
+</div>
+</div>
+<!-- Block (Stacked Vertically for efficiency next to wide Attack) -->
+<div class="bg-gray-800/40 rounded-xl p-3 flex flex-col items-center justify-between border border-white/5 w-20">
+<span class="text-[10px] uppercase text-gray-400 font-bold mb-2">Блок</span>
+<button class="w-full h-10 mb-2 bg-success/20 hover:bg-success text-success hover:text-white rounded-lg flex items-center justify-center border border-success/30 transition-all active:scale-95">
+<span class="material-icons-round text-sm">add</span>
+</button>
+<button class="w-full h-10 bg-danger/20 hover:bg-danger text-danger hover:text-white rounded-lg flex items-center justify-center border border-danger/30 transition-all active:scale-95">
+<span class="material-icons-round text-sm">remove</span>
+</button>
+</div>
+</div>
+<!-- Row 2: Serve -->
+<div class="bg-gray-800/40 rounded-xl p-3 border border-white/5">
+<span class="text-xs uppercase text-gray-400 font-bold mb-2 ml-1 block">Подача</span>
+<div class="grid grid-cols-3 gap-2">
+<button class="h-14 bg-success/20 hover:bg-success text-success hover:text-white rounded-lg flex flex-col items-center justify-center border border-success/30 transition-all active:scale-95 group">
+<span class="material-icons-round mb-0.5 group-hover:scale-110 transition-transform">star</span>
+<span class="text-[10px] font-bold">Эйс</span>
+</button>
+<button class="h-14 bg-danger/20 hover:bg-danger text-danger hover:text-white rounded-lg flex flex-col items-center justify-center border border-danger/30 transition-all active:scale-95 group">
+<span class="material-icons-round mb-0.5 group-hover:scale-110 transition-transform">close</span>
+<span class="text-[10px] font-bold">Ошиб</span>
+</button>
+<button class="h-14 bg-gray-700/50 hover:bg-gray-600 text-gray-300 rounded-lg flex flex-col items-center justify-center border border-gray-600/30 transition-all active:scale-95">
+<span class="text-lg font-bold">В игру</span>
+</button>
+</div>
+</div>
+<!-- Row 3: Reception -->
+<div class="bg-gray-800/40 rounded-xl p-3 border border-white/5 mb-4">
+<span class="text-xs uppercase text-gray-400 font-bold mb-2 ml-1 block">Приём</span>
+<div class="grid grid-cols-3 gap-2">
+<button class="h-12 bg-success/20 hover:bg-success text-success hover:text-white rounded-lg flex items-center justify-center border border-success/30 transition-all active:scale-95">
+<span class="material-icons-round">check_circle</span>
+</button>
+<button class="h-12 bg-danger/20 hover:bg-danger text-danger hover:text-white rounded-lg flex items-center justify-center border border-danger/30 transition-all active:scale-95">
+<span class="material-icons-round">highlight_off</span>
+</button>
+<button class="h-12 bg-gray-700/50 hover:bg-gray-600 text-gray-300 rounded-lg flex items-center justify-center border border-gray-600/30 transition-all active:scale-95 font-bold">
+                        -
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Fixed Control Bar -->
+<footer class="fixed bottom-0 w-full glass-panel z-50 safe-bottom border-t border-white/10">
+<div class="flex items-center justify-between px-6 py-4">
+<!-- Left Group: Undo & Menu -->
+<div class="flex items-center gap-4">
+<button class="flex flex-col items-center text-gray-400 hover:text-white active:scale-95 transition-colors">
+<span class="material-icons-round text-2xl">menu</span>
+</button>
+<div class="h-8 w-px bg-white/10"></div>
+<button class="flex flex-col items-center text-gray-400 hover:text-white active:scale-95 transition-colors group">
+<span class="material-icons-round text-2xl group-active:-rotate-45 transition-transform">undo</span>
+</button>
+</div>
+<!-- Right: End Set Button -->
+<button class="bg-danger hover:bg-red-600 text-white pl-4 pr-5 py-3 rounded-xl font-bold flex items-center shadow-lg shadow-red-900/40 active:scale-95 transition-all">
+<span class="material-icons-round mr-2 text-xl">flag</span>
+<span>Завершить сет</span>
+</button>
+</div>
+</footer>
+</body></html>

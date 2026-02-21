@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Управление командой INEX TEAM</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3780f6",
+                        "primary-dark": "#1d5dc9",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0F1923", // Using user requested background
+                        "surface-dark": "#1C252E",
+                        "surface-glass": "rgba(255, 255, 255, 0.05)",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem", // 16px as requested
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Utilities for Glassmorphism and Premium feel */
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card-hover:active {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            transform: scale(0.99);
+            transition: all 0.2s ease;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hide scrollbar for clean look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Floating Glow Effect */
+        .glow-bg {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(55, 128, 246, 0.15) 0%, rgba(15, 25, 35, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white font-display antialiased selection:bg-primary/30 min-h-screen flex flex-col overflow-hidden relative">
+<!-- Decorative Glows -->
+<div class="glow-bg top-[-100px] left-[-50px]"></div>
+<div class="glow-bg bottom-[10%] right-[-50px] opacity-50"></div>
+<!-- Status Bar Spacer (Simulated for iOS) -->
+<div class="h-12 w-full shrink-0"></div>
+<!-- Header -->
+<header class="px-6 py-4 flex items-center justify-between shrink-0 relative z-10">
+<button class="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors text-white">
+<span class="material-icons-round text-2xl">arrow_back</span>
+</button>
+<h1 class="text-lg font-semibold tracking-wide text-white">Управление командой</h1>
+<div class="w-10"></div> <!-- Spacer for optical centering -->
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar px-6 pb-24 relative z-10">
+<!-- Team Card (Hero) -->
+<div class="glass-panel rounded-lg p-6 mb-8 relative overflow-hidden group">
+<!-- Subtle internal gradient -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50"></div>
+<div class="relative flex items-center gap-5">
+<!-- Team Logo Placeholder -->
+<div class="w-20 h-20 rounded-full bg-gradient-to-tr from-primary to-primary-dark flex items-center justify-center shrink-0 shadow-lg shadow-primary/20 border-2 border-white/10">
+<span class="text-2xl font-bold text-white tracking-widest">IT</span>
+</div>
+<div class="flex-1">
+<h2 class="text-2xl font-bold text-white mb-1 leading-tight">INEX TEAM</h2>
+<div class="flex items-center text-slate-400 text-sm font-medium">
+<span class="material-icons-round text-base mr-1">location_on</span>
+                        Москва
+                    </div>
+</div>
+<button class="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-primary shrink-0 backdrop-blur-md shadow-inner">
+<span class="material-icons-round text-xl">edit</span>
+</button>
+</div>
+<!-- Stats Row (Optional decoration for premium feel) -->
+<div class="relative mt-6 pt-5 border-t border-white/5 grid grid-cols-3 gap-4">
+<div class="text-center">
+<div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Игроков</div>
+<div class="text-lg font-bold text-white">12</div>
+</div>
+<div class="text-center border-l border-white/5 border-r">
+<div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Игр</div>
+<div class="text-lg font-bold text-white">24</div>
+</div>
+<div class="text-center">
+<div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Побед</div>
+<div class="text-lg font-bold text-primary">18</div>
+</div>
+</div>
+</div>
+<!-- Roster Section -->
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-xl font-bold text-white">Состав</h3>
+<span class="text-sm text-slate-500 font-medium bg-surface-dark px-3 py-1 rounded-full border border-white/5">6 игроков</span>
+</div>
+<div class="space-y-3">
+<!-- Player Card 1 -->
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 glass-card-hover cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center shrink-0 text-primary font-bold text-lg shadow-inner">
+                    5
+                </div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-medium text-base truncate">Смуров Илья</h4>
+<div class="mt-1 flex items-center">
+<span class="px-2.5 py-0.5 rounded-md bg-primary/20 text-primary text-xs font-semibold border border-primary/20">Связующий</span>
+</div>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors p-2">
+<span class="material-icons-round">more_vert</span>
+</button>
+</div>
+<!-- Player Card 2 -->
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 glass-card-hover cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center shrink-0 text-primary font-bold text-lg shadow-inner">
+                    6
+                </div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-medium text-base truncate">Вагин Илья</h4>
+<div class="mt-1 flex items-center">
+<span class="px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-400 text-xs font-semibold border border-blue-500/20">Доигровщик</span>
+</div>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors p-2">
+<span class="material-icons-round">more_vert</span>
+</button>
+</div>
+<!-- Player Card 3 -->
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 glass-card-hover cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center shrink-0 text-primary font-bold text-lg shadow-inner">
+                    9
+                </div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-medium text-base truncate">Мокров Евгений</h4>
+<div class="mt-1 flex items-center">
+<span class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/20">Диагональный</span>
+</div>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors p-2">
+<span class="material-icons-round">more_vert</span>
+</button>
+</div>
+<!-- Player Card 4 -->
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 glass-card-hover cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center shrink-0 text-primary font-bold text-lg shadow-inner">
+                    15
+                </div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-medium text-base truncate">Власов Владислав</h4>
+<div class="mt-1 flex items-center">
+<span class="px-2.5 py-0.5 rounded-md bg-purple-500/20 text-purple-400 text-xs font-semibold border border-purple-500/20">Центральный</span>
+</div>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors p-2">
+<span class="material-icons-round">more_vert</span>
+</button>
+</div>
+<!-- Player Card 5 -->
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 glass-card-hover cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center shrink-0 text-primary font-bold text-lg shadow-inner">
+                    17
+                </div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-medium text-base truncate">Муравьев Сергей</h4>
+<div class="mt-1 flex items-center">
+<span class="px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-400 text-xs font-semibold border border-blue-500/20">Доигровщик</span>
+</div>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors p-2">
+<span class="material-icons-round">more_vert</span>
+</button>
+</div>
+<!-- Player Card 6 (Libero - Highlighted) -->
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 glass-card-hover cursor-pointer relative overflow-hidden">
+<!-- Subtle indicator for Libero -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-amber-500/50"></div>
+<div class="w-12 h-12 rounded-full bg-surface-dark border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-500 font-bold text-lg shadow-inner">
+                    21
+                </div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-medium text-base truncate">Белов Георгий</h4>
+<div class="mt-1 flex items-center">
+<span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-500 text-xs font-semibold border border-amber-500/20">Либеро</span>
+</div>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors p-2">
+<span class="material-icons-round">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Bottom Spacing for FAB -->
+<div class="h-16"></div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="w-14 h-14 rounded-full bg-gradient-to-tr from-primary to-primary-dark text-white shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300">
+<span class="material-icons-round text-3xl">add</span>
+</button>
+</div>
+<!-- Background texture image for visual interest -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-0" data-alt="Abstract carbon fiber pattern texture overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCKPNL7-OoUd98ia_ZXiOvm4-FuhvceRAch8CAqOthTmjK4IFBYW2xp35j8vfakb6uti79cpmrg4cSX8uUXoqIzEkID-ZW4g3OAiM47aWSGgWZytUZUtzhPDWettHmuM_-XhtKTA_ItcruJbztw3zgvRfOs2sTzAVcKgnNSqEP0dftBkhB9-Fq708nj_yO0bXi8R1nt2FPG_92DB7V_RNupr_3FaE7qNGFjDbF_wNXFIAgvZUfiSTcZlFV3OipgVZYEh_z0gYyNB6c');">
+</div>
+</body></html>

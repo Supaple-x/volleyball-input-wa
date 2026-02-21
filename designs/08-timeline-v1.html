@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ход игры: Таймлайн матча</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                        "surface-dark": "#1A2433", // Slightly lighter for cards
+                        "success": "#22C55E",
+                        "danger": "#EF4444",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "lg": "2rem", 
+                        "xl": "3rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(16, 23, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .score-pill {
+            background: rgba(60, 131, 246, 0.15);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(60, 131, 246, 0.3);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white font-display antialiased selection:bg-primary selection:text-white h-screen overflow-hidden flex flex-col relative">
+<!-- Header Section -->
+<header class="glass-panel sticky top-0 z-50 pt-12 pb-4 px-6">
+<div class="flex items-center justify-between mb-6">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-icons text-2xl">arrow_back</span>
+</button>
+<h1 class="text-xl font-semibold tracking-wide">Ход игры</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-icons text-2xl">filter_list</span>
+</button>
+</div>
+<!-- Set Selector Tabs -->
+<div class="flex space-x-2 overflow-x-auto no-scrollbar pb-2">
+<button class="flex-none px-6 py-2 bg-primary text-white rounded-full text-sm font-medium shadow-lg shadow-primary/25 transition-transform active:scale-95">
+                Сет 1
+            </button>
+<button class="flex-none px-6 py-2 bg-surface-dark border border-white/5 text-slate-400 rounded-full text-sm font-medium hover:text-white hover:bg-white/5 transition-colors">
+                Сет 2
+            </button>
+<button class="flex-none px-6 py-2 bg-surface-dark border border-white/5 text-slate-400 rounded-full text-sm font-medium hover:text-white hover:bg-white/5 transition-colors">
+                Сет 3
+            </button>
+<button class="flex-none px-6 py-2 bg-surface-dark border border-white/5 text-slate-400 rounded-full text-sm font-medium hover:text-white hover:bg-white/5 transition-colors">
+                Все
+            </button>
+</div>
+<!-- Team Legend (Optional for clarity) -->
+<div class="flex justify-between items-center mt-4 px-2 text-xs text-slate-500 font-medium uppercase tracking-wider">
+<span>Зенит-Казань</span>
+<span>Динамо М</span>
+</div>
+</header>
+<!-- Main Content Area: Timeline -->
+<main class="flex-1 overflow-y-auto relative no-scrollbar pb-20">
+<!-- Central Axis Line -->
+<div class="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent -translate-x-1/2 pointer-events-none"></div>
+<div class="px-4 py-6 space-y-8">
+<!-- Start Match Marker -->
+<div class="flex justify-center mb-8">
+<span class="px-4 py-1 rounded-full bg-surface-dark border border-white/5 text-xs text-slate-400 uppercase tracking-widest font-semibold">
+                    Начало матча 19:00
+                </span>
+</div>
+<!-- Event 1: Left (Home) Point -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) -->
+<div class="w-[45%] flex flex-col items-end text-right pr-4">
+<div class="flex items-center space-x-2 space-x-reverse mb-1">
+<span class="font-bold text-sm">Михайлов</span>
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-primary/20">18</div>
+</div>
+<span class="text-xs font-medium text-success mb-1">Результативная атака</span>
+<span class="text-[10px] text-slate-500">19:01</span>
+</div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        1 : 0
+                    </div>
+</div>
+<!-- Right Content (Away) - Empty for this row -->
+<div class="w-[45%] pl-4"></div>
+</div>
+<!-- Event 2: Right (Away) Point -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) - Empty -->
+<div class="w-[45%] pr-4"></div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        1 : 1
+                    </div>
+</div>
+<!-- Right Content (Away) -->
+<div class="w-[45%] flex flex-col items-start pl-4">
+<div class="flex items-center space-x-2 mb-1">
+<div class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-indigo-500/20">7</div>
+<span class="font-bold text-sm">Соколов</span>
+</div>
+<span class="text-xs font-medium text-success mb-1">Блок</span>
+<span class="text-[10px] text-slate-500">19:02</span>
+</div>
+</div>
+<!-- Event 3: Left (Home) Error -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) -->
+<div class="w-[45%] flex flex-col items-end text-right pr-4">
+<div class="flex items-center space-x-2 space-x-reverse mb-1">
+<span class="font-bold text-sm">Волков</span>
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-primary/20">15</div>
+</div>
+<span class="text-xs font-medium text-danger mb-1">Ошибка на подаче</span>
+<span class="text-[10px] text-slate-500">19:03</span>
+</div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        1 : 2
+                    </div>
+</div>
+<!-- Right Content (Away) - Empty -->
+<div class="w-[45%] pl-4"></div>
+</div>
+<!-- Event 4: Right (Away) Point -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) - Empty -->
+<div class="w-[45%] pr-4"></div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        1 : 3
+                    </div>
+</div>
+<!-- Right Content (Away) -->
+<div class="w-[45%] flex flex-col items-start pl-4">
+<div class="flex items-center space-x-2 mb-1">
+<div class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-indigo-500/20">10</div>
+<span class="font-bold text-sm">Власов</span>
+</div>
+<span class="text-xs font-medium text-success mb-1">Эйс</span>
+<span class="text-[10px] text-slate-500">19:04</span>
+</div>
+</div>
+<!-- Timeout Event (Special Card) -->
+<div class="relative flex justify-center py-2">
+<!-- Line decoration behind -->
+<div class="absolute top-1/2 left-0 w-full h-px bg-white/5 -z-10"></div>
+<div class="bg-surface-dark border border-white/10 px-4 py-2 rounded-lg flex items-center space-x-3 shadow-lg">
+<span class="material-icons text-amber-500 text-sm">timer</span>
+<span class="text-xs font-bold text-white uppercase tracking-wide">Тайм-аут: Зенит-Казань</span>
+</div>
+</div>
+<!-- Event 5: Left (Home) Point -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) -->
+<div class="w-[45%] flex flex-col items-end text-right pr-4">
+<div class="flex items-center space-x-2 space-x-reverse mb-1">
+<span class="font-bold text-sm">Кристенсон</span>
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-primary/20">11</div>
+</div>
+<span class="text-xs font-medium text-success mb-1">Скидка</span>
+<span class="text-[10px] text-slate-500">19:06</span>
+</div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        2 : 3
+                    </div>
+</div>
+<!-- Right Content (Away) - Empty -->
+<div class="w-[45%] pl-4"></div>
+</div>
+<!-- Event 6: Substitution (Special Row) -->
+<div class="relative flex justify-between items-start w-full">
+<!-- Left Content (Home) Substitution -->
+<div class="w-[45%] flex flex-col items-end text-right pr-4">
+<div class="inline-flex items-center bg-white/5 border border-white/5 rounded-lg px-2 py-1 space-x-2 space-x-reverse">
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-success font-bold flex items-center gap-1">
+<span class="material-icons text-[10px]">arrow_upward</span> Сурмачевский
+                            </span>
+<span class="text-[10px] text-danger font-bold flex items-center gap-1">
+<span class="material-icons text-[10px]">arrow_downward</span> Деру
+                            </span>
+</div>
+<span class="material-icons text-slate-500 text-sm">cached</span>
+</div>
+<span class="text-[10px] text-slate-500 mt-1">19:07 • Замена</span>
+</div>
+<!-- Center Marker Dot -->
+<div class="absolute left-1/2 top-3 -translate-x-1/2 z-10 w-2 h-2 rounded-full bg-slate-600"></div>
+<!-- Right Content (Away) - Empty -->
+<div class="w-[45%] pl-4"></div>
+</div>
+<!-- Event 7: Left (Home) Point via Opponent Error -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) -->
+<div class="w-[45%] flex flex-col items-end text-right pr-4">
+<!-- No specific player for opponent error sometimes, or attribution to server -->
+<span class="text-xs font-medium text-slate-300 mb-1">Очко (ошибка соперника)</span>
+<span class="text-[10px] text-slate-500">19:08</span>
+</div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        3 : 3
+                    </div>
+</div>
+<!-- Right Content (Away) -->
+<div class="w-[45%] flex flex-col items-start pl-4 opacity-60">
+<div class="flex items-center space-x-2 mb-1">
+<div class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-indigo-500/20">9</div>
+<span class="font-bold text-sm">Богдан</span>
+</div>
+<span class="text-xs font-medium text-danger">Атака в аут</span>
+</div>
+</div>
+<!-- Event 8: Right (Away) Point -->
+<div class="relative flex justify-between items-center group w-full">
+<!-- Left Content (Home) - Empty -->
+<div class="w-[45%] pr-4"></div>
+<!-- Center Score Pill -->
+<div class="absolute left-1/2 -translate-x-1/2 z-10">
+<div class="score-pill px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest">
+                        3 : 4
+                    </div>
+</div>
+<!-- Right Content (Away) -->
+<div class="w-[45%] flex flex-col items-start pl-4">
+<div class="flex items-center space-x-2 mb-1">
+<div class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-indigo-500/20">11</div>
+<span class="font-bold text-sm">Панков</span>
+</div>
+<span class="text-xs font-medium text-success mb-1">Скидка</span>
+<span class="text-[10px] text-slate-500">19:10</span>
+</div>
+</div>
+<!-- Placeholder for scrolling effect -->
+<div class="h-20 flex items-center justify-center opacity-30">
+<span class="text-xs text-slate-500">...</span>
+</div>
+</div>
+</main>
+<!-- Bottom Gradient Fade for Aesthetics -->
+<div class="pointer-events-none fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background-dark to-transparent z-40"></div>
+<!-- Floating Stats Button (Optional context addition) -->
+<button class="absolute bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center z-50 active:scale-95 transition-transform">
+<span class="material-icons">analytics</span>
+</button>
+</body></html>

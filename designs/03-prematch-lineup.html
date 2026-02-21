@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Настройка состава на матч</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0F1923", // Custom dark background from prompt
+                        "glass": "rgba(255, 255, 255, 0.05)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                        "surface-dark": "#1A242D",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom styles for glassmorphism and details */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Hiding scrollbar for horizontal scroll if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Volleyball court grid lines */
+        .court-grid {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 33.33% 50%; 
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col overflow-hidden selection:bg-primary selection:text-white">
+<!-- Header -->
+<header class="pt-12 pb-4 px-6 flex items-center justify-between sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-gray-200 dark:active:bg-gray-800 transition-colors">
+<span class="material-icons text-gray-800 dark:text-white">chevron_left</span>
+</button>
+<h1 class="text-lg font-bold tracking-wide">Настройка матча</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-gray-200 dark:active:bg-gray-800 transition-colors">
+<span class="material-icons text-gray-800 dark:text-gray-400">more_vert</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto px-4 pb-32 no-scrollbar">
+<!-- Matchup Banner -->
+<div class="glass-panel rounded-xl p-4 mb-6 flex items-center justify-between relative overflow-hidden">
+<!-- Decorative gradient -->
+<div class="absolute -top-10 -left-10 w-24 h-24 bg-primary/20 blur-3xl rounded-full pointer-events-none"></div>
+<div class="flex flex-col items-center gap-2 z-10 w-1/3">
+<div class="w-14 h-14 rounded-full bg-surface-dark border-2 border-primary/30 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-90" data-alt="INEX Team Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlMvDu82YfPQRfODzGYsKoDSatLvWMdO0GhM38jhHog2zG-qXT_ibbqL0IfXtykF7ZXtMFQKsMPbUOhfQsBUPdl7sArpNtBVHg3ev5svLMrxRig8noX3e_XfAcOF3b4uwsaC5hI32Wzk7h__sBUF0LSo9Bowhz97JSxh_UgrrzXrBnJ58NsFVJHXGygZBh4dD641jufnZnbD9oqPJq7dAEGI8slPLOEPonTCrX-C8NL70vYvMoFq9HFO6T24lZ5-TEIankoqoQ1ac"/>
+</div>
+<span class="text-xs font-semibold text-white tracking-wider text-center">INEX TEAM</span>
+</div>
+<div class="flex flex-col items-center justify-center z-10">
+<span class="text-xl font-black text-gray-500/50 italic">VS</span>
+<span class="text-[10px] text-gray-400 uppercase mt-1">18:00</span>
+</div>
+<div class="flex flex-col items-center gap-2 z-10 w-1/3">
+<div class="w-14 h-14 rounded-full bg-surface-dark border-2 border-gray-700 flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all">
+<img class="w-full h-full object-cover opacity-90" data-alt="Komus Team Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDynZj_zy_0JQc7tsgu458pqCxID0Ugmtsp0m_9xbIMWTR65-o3ax22L-qJUFMt_9sWAazJSQxxEkJDYG6AnJ8DqGD1mKaWsvcA7sox6U_4VeoUNZx8-Hx4ARcTF2CMPt23tfXavbeVRj2gHdlKQvAlpJX8RuSlclfokty4UJRhnEjl0nxz9fTVb2rhTEITOvV3cwEkb9m701XDwfTExhUMmzYFfa4jX5B-tztF7tSPjASh3sApe_qM24f5rREBgoioh6L-70v1mUo"/>
+</div>
+<span class="text-xs font-semibold text-gray-400 tracking-wider text-center">КОМУС</span>
+</div>
+</div>
+<!-- Team Switcher -->
+<div class="bg-surface-dark rounded-xl p-1 flex mb-8">
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg bg-primary text-white shadow-lg shadow-primary/25 transition-all">
+                INEX TEAM
+            </button>
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition-all">
+                Комус
+            </button>
+</div>
+<!-- Starting Six Section -->
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4 px-1">
+<h2 class="text-sm font-bold text-gray-300 uppercase tracking-wider">Стартовая шестёрка</h2>
+<span class="text-xs text-primary font-medium bg-primary/10 px-2 py-1 rounded-md">4/6 выбрано</span>
+</div>
+<!-- Court Visual -->
+<div class="glass-panel rounded-xl p-4 relative overflow-hidden">
+<!-- Court Outline -->
+<div class="relative w-full aspect-[3/2] border-2 border-white/20 rounded-lg bg-[#273546] court-grid">
+<!-- Net Line (Top) -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+<!-- 3m Line -->
+<div class="absolute top-1/3 left-0 w-full h-px bg-white/20 border-t border-dashed border-white/30"></div>
+<!-- Zones Grid -->
+<div class="grid grid-cols-3 grid-rows-2 h-full w-full">
+<!-- Front Row: Zones 4, 3, 2 -->
+<div class="relative flex items-center justify-center border-r border-b border-white/5">
+<span class="absolute top-2 left-2 text-[10px] text-gray-500 font-bold">Z4</span>
+<!-- Filled Slot Example -->
+<div class="flex flex-col items-center animate-fade-in cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary border-2 border-white shadow-lg shadow-primary/40 flex items-center justify-center relative overflow-hidden group-active:scale-95 transition-transform">
+<span class="text-lg font-bold text-white">7</span>
+<img class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" data-alt="Ivanov Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuk_jCtdl_PeJWHQwLXt3svwXyNnHlZ54k6-5c_Invna4pUZZK-y5is4PJT5FkS6BaUlyYHOJcon0m6ffC2SZUSzVQvp8Zq60QNDiFktTzEmbE74Wn2QWvbKcyWL9XmyyyZytX2De7zDtwFjTMDQQ3MZckp0O7nDv3a6s6V-Ugc6Z948zqvQ2c0G90spaIk9ruMQiNRYwjxqVxeSJZgF_TTe-gh-wwoxn4uJIj7hhlvt32uje7ub0r2YMcAJRyAMxevgm_hvD7l4c"/>
+</div>
+<span class="text-[10px] font-medium text-white mt-1 truncate max-w-[60px]">Иванов</span>
+</div>
+</div>
+<div class="relative flex items-center justify-center border-r border-b border-white/5">
+<span class="absolute top-2 left-2 text-[10px] text-gray-500 font-bold">Z3</span>
+<!-- Empty Slot -->
+<button class="w-12 h-12 rounded-full border-2 border-dashed border-white/20 hover:border-primary/50 flex items-center justify-center transition-colors active:bg-primary/10">
+<span class="material-icons text-white/20 text-xl">add</span>
+</button>
+</div>
+<div class="relative flex items-center justify-center border-b border-white/5">
+<span class="absolute top-2 left-2 text-[10px] text-gray-500 font-bold">Z2</span>
+<!-- Filled Slot -->
+<div class="flex flex-col items-center cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary border-2 border-white shadow-lg shadow-primary/40 flex items-center justify-center relative overflow-hidden group-active:scale-95 transition-transform">
+<span class="text-lg font-bold text-white">12</span>
+</div>
+<span class="text-[10px] font-medium text-white mt-1 truncate max-w-[60px]">Петров</span>
+</div>
+</div>
+<!-- Back Row: Zones 5, 6, 1 -->
+<div class="relative flex items-center justify-center border-r border-white/5">
+<span class="absolute bottom-2 left-2 text-[10px] text-gray-500 font-bold">Z5</span>
+<!-- Filled Slot -->
+<div class="flex flex-col items-center cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary border-2 border-white shadow-lg shadow-primary/40 flex items-center justify-center relative overflow-hidden group-active:scale-95 transition-transform">
+<span class="text-lg font-bold text-white">4</span>
+</div>
+<span class="text-[10px] font-medium text-white mt-1 truncate max-w-[60px]">Смирнов</span>
+</div>
+</div>
+<div class="relative flex items-center justify-center border-r border-white/5">
+<span class="absolute bottom-2 left-2 text-[10px] text-gray-500 font-bold">Z6</span>
+<!-- Empty Slot -->
+<button class="w-12 h-12 rounded-full border-2 border-dashed border-white/20 hover:border-primary/50 flex items-center justify-center transition-colors active:bg-primary/10">
+<span class="material-icons text-white/20 text-xl">add</span>
+</button>
+</div>
+<div class="relative flex items-center justify-center">
+<span class="absolute bottom-2 left-2 text-[10px] text-gray-500 font-bold">Z1</span>
+<!-- Filled Slot -->
+<div class="flex flex-col items-center cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary border-2 border-white shadow-lg shadow-primary/40 flex items-center justify-center relative overflow-hidden group-active:scale-95 transition-transform">
+<span class="text-lg font-bold text-white">9</span>
+</div>
+<span class="text-[10px] font-medium text-white mt-1 truncate max-w-[60px]">Сидоров</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Libero Section -->
+<div class="mb-8">
+<h2 class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3 px-1">Либеро</h2>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+<!-- Libero Slot 1 -->
+<div class="glass-panel rounded-xl p-3 flex items-center gap-3 min-w-[160px] cursor-pointer active:scale-95 transition-transform">
+<div class="w-10 h-10 rounded-full bg-[#EAB308] border-2 border-white/80 shadow-lg shadow-yellow-500/20 flex items-center justify-center">
+<span class="text-sm font-bold text-white">L1</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-gray-400">Либеро 1</span>
+<span class="text-sm font-semibold text-white">Не выбран</span>
+</div>
+<span class="material-icons text-gray-600 ml-auto text-sm">add</span>
+</div>
+<!-- Libero Slot 2 (Optional) -->
+<div class="border border-white/5 rounded-xl p-3 flex items-center gap-3 min-w-[160px] opacity-50 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="w-10 h-10 rounded-full border border-dashed border-white/30 flex items-center justify-center">
+<span class="text-xs font-bold text-gray-500">L2</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500">Либеро 2</span>
+<span class="text-sm font-medium text-gray-400">Пусто</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Roster / Available Players -->
+<div>
+<h2 class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3 px-1 sticky top-0 bg-background-dark/95 py-2 z-10 backdrop-blur-sm">Запасные</h2>
+<div class="space-y-3">
+<!-- Player Item -->
+<div class="group flex items-center gap-4 bg-surface-dark/50 hover:bg-surface-dark border border-white/5 rounded-xl p-3 cursor-pointer transition-all">
+<div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 transition-all">
+                        15
+                    </div>
+<div class="flex flex-col flex-1">
+<span class="text-sm font-semibold text-gray-200">Дмитрий Волков</span>
+<span class="text-[10px] text-gray-500 uppercase tracking-wide">Доигровщик</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white">
+<span class="material-icons text-sm">drag_indicator</span>
+</button>
+</div>
+<!-- Player Item -->
+<div class="group flex items-center gap-4 bg-surface-dark/50 hover:bg-surface-dark border border-white/5 rounded-xl p-3 cursor-pointer transition-all">
+<div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 transition-all">
+                        3
+                    </div>
+<div class="flex flex-col flex-1">
+<span class="text-sm font-semibold text-gray-200">Александр Соколов</span>
+<span class="text-[10px] text-gray-500 uppercase tracking-wide">Связующий</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white">
+<span class="material-icons text-sm">drag_indicator</span>
+</button>
+</div>
+<!-- Player Item -->
+<div class="group flex items-center gap-4 bg-surface-dark/50 hover:bg-surface-dark border border-white/5 rounded-xl p-3 cursor-pointer transition-all">
+<div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 transition-all">
+                        11
+                    </div>
+<div class="flex flex-col flex-1">
+<span class="text-sm font-semibold text-gray-200">Максим Михайлов</span>
+<span class="text-[10px] text-gray-500 uppercase tracking-wide">Диагональный</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white">
+<span class="material-icons text-sm">drag_indicator</span>
+</button>
+</div>
+<!-- Player Item -->
+<div class="group flex items-center gap-4 bg-surface-dark/50 hover:bg-surface-dark border border-white/5 rounded-xl p-3 cursor-pointer transition-all">
+<div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 transition-all">
+                        8
+                    </div>
+<div class="flex flex-col flex-1">
+<span class="text-sm font-semibold text-gray-200">Павел Тетюхин</span>
+<span class="text-[10px] text-gray-500 uppercase tracking-wide">Доигровщик</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white">
+<span class="material-icons text-sm">drag_indicator</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Bottom Action -->
+<div class="fixed bottom-0 left-0 w-full p-6 bg-gradient-to-t from-background-dark via-background-dark to-transparent pointer-events-none z-30 flex justify-center">
+<button class="w-full max-w-md bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-xl shadow-primary/40 transition-all pointer-events-auto transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+<span>Начать матч</span>
+<span class="material-icons text-sm">sports_volleyball</span>
+</button>
+</div>
+</body></html>

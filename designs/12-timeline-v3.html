@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ход игры: Таймлайн v3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3c83f6",
+                "background-light": "#f5f7f8",
+                "background-dark": "#0F1923",
+                "success": "#10b981",
+                "error": "#ef4444",
+                "accent-pink": "#ec4899"
+              },
+              fontFamily: {
+                "display": ["Lexend"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .timeline-line {
+            background: linear-gradient(to bottom, rgba(60, 131, 246, 0.1), rgba(60, 131, 246, 0.8), rgba(60, 131, 246, 0.1));
+            width: 2px;
+            box-shadow: 0 0 15px rgba(60, 131, 246, 0.5);
+        }
+        .score-glow {
+            box-shadow: 0 0 20px rgba(60, 131, 246, 0.4);
+        }
+        .ios-status-bar {
+            height: env(safe-area-inset-top);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-200 antialiased selection:bg-primary/30">
+<!-- Top Sticky Header -->
+<header class="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md border-b border-white/5">
+<div class="ios-status-bar"></div>
+<div class="px-6 py-4 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+<span class="material-icons text-white">chevron_left</span>
+</button>
+<h1 class="text-xl font-semibold tracking-tight text-white">Ход игры</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+<span class="material-icons text-white">share</span>
+</button>
+</div>
+<!-- Set Tabs -->
+<div class="flex items-center gap-2 bg-white/5 p-1 rounded-full overflow-x-auto no-scrollbar">
+<button class="flex-1 py-2 px-4 bg-primary text-white rounded-full text-sm font-medium whitespace-nowrap transition-all shadow-lg shadow-primary/20">Сет 1</button>
+<button class="flex-1 py-2 px-4 text-slate-400 hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-all">Сет 2</button>
+<button class="flex-1 py-2 px-4 text-slate-400 hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-all">Сет 3</button>
+<button class="flex-1 py-2 px-4 text-slate-400 hover:text-white rounded-full text-sm font-medium whitespace-nowrap transition-all">Все</button>
+</div>
+</div>
+</header>
+<!-- Main Timeline Container -->
+<main class="relative px-4 pt-8 pb-20 max-w-lg mx-auto">
+<!-- Team Names Legend -->
+<div class="flex justify-between items-center mb-10 px-2 opacity-60 uppercase tracking-widest text-[10px] font-bold">
+<span class="text-primary">INEX TEAM</span>
+<span class="text-accent-pink">КОМУС</span>
+</div>
+<!-- Central Timeline Line -->
+<div class="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 timeline-line opacity-30 pointer-events-none"></div>
+<!-- Timeline Events -->
+<div class="space-y-12 relative">
+<!-- Event 1: Left (Home) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="text-right">
+<div class="glass-card p-4 rounded-xl flex flex-col items-end gap-2 border-r-4 border-r-primary">
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-slate-400">М. Сидоров</span>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-primary/30">
+                                07
+                            </div>
+</div>
+<span class="text-[10px] py-0.5 px-2 rounded-full bg-success/20 text-success font-bold uppercase tracking-wider">Эйс</span>
+</div>
+</div>
+<div></div>
+<!-- Score Pin -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="bg-background-dark border border-primary/40 px-3 py-1 rounded-full score-glow text-[11px] font-bold text-primary">
+                        1:0
+                    </div>
+</div>
+</div>
+<!-- Event 2: Right (Away) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div></div>
+<div class="text-left">
+<div class="glass-card p-4 rounded-xl flex flex-col items-start gap-2 border-l-4 border-l-accent-pink">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-accent-pink flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-accent-pink/30">
+                                12
+                            </div>
+<span class="text-xs font-semibold text-slate-400">А. Кузнецов</span>
+</div>
+<span class="text-[10px] py-0.5 px-2 rounded-full bg-success/20 text-success font-bold uppercase tracking-wider">Атака</span>
+</div>
+</div>
+<!-- Score Pin -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="bg-background-dark border border-white/20 px-3 py-1 rounded-full text-[11px] font-bold text-slate-300">
+                        1:1
+                    </div>
+</div>
+</div>
+<!-- Event 3: Left (Home) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="text-right">
+<div class="glass-card p-4 rounded-xl flex flex-col items-end gap-2 border-r-4 border-r-primary">
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-slate-400">П. Иванов</span>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-primary/30">
+                                04
+                            </div>
+</div>
+<span class="text-[10px] py-0.5 px-2 rounded-full bg-error/20 text-error font-bold uppercase tracking-wider">Ошибка</span>
+</div>
+</div>
+<div></div>
+<!-- Score Pin -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="bg-background-dark border border-white/20 px-3 py-1 rounded-full text-[11px] font-bold text-slate-300">
+                        1:2
+                    </div>
+</div>
+</div>
+<!-- Event 4: Right (Away) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div></div>
+<div class="text-left">
+<div class="glass-card p-4 rounded-xl flex flex-col items-start gap-2 border-l-4 border-l-accent-pink">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-accent-pink flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-accent-pink/30">
+                                09
+                            </div>
+<span class="text-xs font-semibold text-slate-400">С. Петров</span>
+</div>
+<span class="text-[10px] py-0.5 px-2 rounded-full bg-success/20 text-success font-bold uppercase tracking-wider">Блок</span>
+</div>
+</div>
+<!-- Score Pin -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="bg-background-dark border border-white/20 px-3 py-1 rounded-full text-[11px] font-bold text-slate-300">
+                        1:3
+                    </div>
+</div>
+</div>
+<!-- Time Out Indicator -->
+<div class="relative flex justify-center py-4">
+<div class="bg-amber-500/10 border border-amber-500/20 px-6 py-2 rounded-full flex items-center gap-2">
+<span class="material-icons text-amber-500 text-sm">schedule</span>
+<span class="text-[10px] font-bold text-amber-500 uppercase tracking-tighter">Тайм-аут: INEX TEAM</span>
+</div>
+</div>
+<!-- Event 5: Left (Home) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="text-right">
+<div class="glass-card p-4 rounded-xl flex flex-col items-end gap-2 border-r-4 border-r-primary">
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-slate-400">М. Сидоров</span>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-primary/30">
+                                07
+                            </div>
+</div>
+<span class="text-[10px] py-0.5 px-2 rounded-full bg-success/20 text-success font-bold uppercase tracking-wider">Атака</span>
+</div>
+</div>
+<div></div>
+<!-- Score Pin -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="bg-background-dark border border-primary/40 px-3 py-1 rounded-full score-glow text-[11px] font-bold text-primary">
+                        2:3
+                    </div>
+</div>
+</div>
+<!-- More events... -->
+<div class="text-center py-10">
+<span class="text-xs text-slate-500 font-medium tracking-widest uppercase">Начало матча</span>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Quick Stat) -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="w-14 h-14 bg-primary rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center text-white active:scale-90 transition-transform">
+<span class="material-icons">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Mockup -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-dark/90 backdrop-blur-xl border-t border-white/5 px-6 py-3 flex justify-between items-center z-40">
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-icons text-lg">sports_volleyball</span>
+<span class="text-[10px] font-medium">Матчи</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-icons text-lg">insights</span>
+<span class="text-[10px] font-medium">Статистика</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-icons text-lg">groups</span>
+<span class="text-[10px] font-medium">Команды</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-icons text-lg">settings</span>
+<span class="text-[10px] font-medium">Профиль</span>
+</div>
+</nav>
+</body></html>

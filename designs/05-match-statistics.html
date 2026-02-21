@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Итоговая статистика матча - VolleyStats</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0F1923", // Using the specific requested dark hex
+                        "surface-dark": "#1b2733",
+                        "secondary-team": "#ef4444", // Red for the opponent
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Custom scrollbar hide for horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 min-h-screen pb-safe">
+<!-- Mobile Container -->
+<div class="max-w-md mx-auto min-h-screen flex flex-col relative overflow-hidden">
+<!-- Abstract Background Glows -->
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[40%] bg-primary/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<div class="absolute bottom-[10%] right-[-10%] w-[60%] h-[40%] bg-secondary-team/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<!-- Header & Tabs -->
+<header class="pt-6 px-4 pb-2 z-10 sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<div class="flex items-center justify-between mb-4">
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-icons text-gray-400">arrow_back_ios_new</span>
+</button>
+<h1 class="text-lg font-medium text-center flex-1 pr-10">Матч #842</h1>
+</div>
+<!-- Tab Bar -->
+<div class="flex space-x-1 overflow-x-auto no-scrollbar pb-2">
+<button class="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-medium whitespace-nowrap shadow-lg shadow-primary/30">
+                    Статистика
+                </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-dark text-gray-400 text-sm font-medium whitespace-nowrap hover:text-white transition-colors">
+                    Протокол
+                </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-dark text-gray-400 text-sm font-medium whitespace-nowrap hover:text-white transition-colors">
+                    Ход игры
+                </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-dark text-gray-400 text-sm font-medium whitespace-nowrap hover:text-white transition-colors">
+                    Документы
+                </button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 py-4 z-10 flex flex-col gap-6">
+<!-- Scoreboard Card -->
+<section class="glass-panel rounded-lg p-6 relative overflow-hidden">
+<!-- Winner Highlight Glow -->
+<div class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-primary/10 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-center relative z-10">
+<!-- Team 1 (Winner) -->
+<div class="flex flex-col items-center w-1/3">
+<div class="relative mb-3">
+<div class="w-16 h-16 rounded-full bg-white/10 p-3 flex items-center justify-center border-2 border-primary shadow-[0_0_15px_rgba(60,131,246,0.3)]">
+<img alt="Logo of INEX TEAM showing simple initials on blue background" class="w-full h-full object-cover rounded-full" data-alt="INEX TEAM logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsnHLj8ZU24SqmvP95g5NFgztkDbtkU1B20VhMHpNW77Y5KYFNKTdJaRrDukz6vWr77lJ3CeT14RBMBOW4IL9cGNQ7EWxQj6X1O9_JrTTfI8cUhF4TcfARHDj2Tnh_O97MzPNc-KogmAgEgUU9cVE6s73s4bHev182f2tZWeekgL0TuiD9RVH1BP177s5uZ3Qko-8uavXem7q9Hzp28XguGqypi2inS6nADVqjX4fxLCix3YpImj_jJPu3du6U-sx8mnuX4WtxiQs"/>
+</div>
+<div class="absolute -top-2 -right-2 bg-yellow-500 rounded-full p-1 shadow-lg">
+<span class="material-icons text-xs text-black font-bold">emoji_events</span>
+</div>
+</div>
+<h2 class="text-sm font-bold text-center leading-tight">INEX TEAM</h2>
+<span class="text-xs text-primary mt-1 font-medium">Хозяева</span>
+</div>
+<!-- Score -->
+<div class="flex flex-col items-center w-1/3">
+<div class="text-5xl font-bold tracking-tighter text-white drop-shadow-xl mb-1">
+                            3 : 0
+                        </div>
+<div class="px-3 py-1 bg-white/5 rounded-full border border-white/10">
+<span class="text-xs text-gray-300 font-medium tracking-wide uppercase">Финал</span>
+</div>
+</div>
+<!-- Team 2 -->
+<div class="flex flex-col items-center w-1/3">
+<div class="relative mb-3">
+<div class="w-16 h-16 rounded-full bg-white/10 p-3 flex items-center justify-center border-2 border-transparent">
+<img alt="Logo of Team Komus showing simple initials on red background" class="w-full h-full object-cover rounded-full opacity-80" data-alt="Komus Team logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtbeTbhSLHMczSprl9ZZ-qm83A4mjRYsHUNFB0E1iqJxJpS_vFMidpomVrypoAHjEE3AON3fm8RlrB2rs4FYXmiQDZfTXP4LDARWG6odR9UutI3lgDKkUop4bZV0Cx0Okp2oY3R5vfCvW1a0rFtGR14LnUuct3P4yjnFvZCq4FWH_CGnb86XfwKxrv27Ue8IYQCPe0O23HPl9_Nj_bo-DOSqe7A2SkO8YliCDWbnE2b_D3sUGEnfBFnERhFnJ20Qwx6fLEx65S28g"/>
+</div>
+</div>
+<h2 class="text-sm font-bold text-center leading-tight text-gray-300">Комус</h2>
+<span class="text-xs text-gray-500 mt-1 font-medium">Гости</span>
+</div>
+</div>
+<!-- Set Scores -->
+<div class="mt-6 pt-4 border-t border-white/10">
+<div class="flex justify-center space-x-6 text-sm font-display">
+<div class="flex flex-col items-center">
+<span class="text-gray-400 text-[10px] uppercase mb-1">Сет 1</span>
+<span class="font-bold text-white">25:16</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-gray-400 text-[10px] uppercase mb-1">Сет 2</span>
+<span class="font-bold text-white">27:25</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-gray-400 text-[10px] uppercase mb-1">Сет 3</span>
+<span class="font-bold text-white">25:22</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Legend -->
+<div class="flex justify-center items-center space-x-6 text-xs font-medium text-gray-400">
+<div class="flex items-center">
+<div class="w-3 h-3 rounded-full bg-primary mr-2 shadow-[0_0_8px_rgba(60,131,246,0.5)]"></div>
+<span>INEX TEAM</span>
+</div>
+<div class="flex items-center">
+<div class="w-3 h-3 rounded-full bg-secondary-team mr-2"></div>
+<span>Комус</span>
+</div>
+</div>
+<!-- Comparison Stats List -->
+<section class="flex flex-col gap-5 pb-8">
+<!-- Helper Component for Stat Row -->
+<!-- 
+                  props: 
+                  label: string
+                  val1: string/number
+                  val2: string/number
+                  p1: percentage width for team 1
+                  p2: percentage width for team 2
+                  highlight: boolean (if team 1 is winner of this stat)
+                -->
+<!-- Total Points -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-lg font-bold text-primary">77</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Всего очков</span>
+<span class="text-lg font-bold text-gray-400">63</span>
+</div>
+<div class="flex h-3 w-full bg-surface-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-l-full relative" style="width: 55%"></div>
+<div class="h-full bg-secondary-team rounded-r-full opacity-60" style="width: 45%"></div>
+</div>
+</div>
+<!-- Points Earned -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-white">49</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Набрано очков</span>
+<span class="text-base font-bold text-gray-400">44</span>
+</div>
+<div class="flex h-2 w-full bg-surface-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 52%"></div>
+<div class="h-full bg-secondary-team opacity-60" style="width: 48%"></div>
+</div>
+</div>
+<!-- Errors (Inversed Logic visually usually, but keeping simple bars here) -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-white">44</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Ошибок</span>
+<span class="text-base font-bold text-secondary-team">49</span>
+</div>
+<!-- Using two separate bars facing each other for variety -->
+<div class="flex items-center gap-2">
+<div class="flex-1 flex justify-end">
+<div class="h-2 rounded-l-full bg-primary" style="width: 47%"></div>
+</div>
+<div class="w-[1px] h-3 bg-gray-700"></div>
+<div class="flex-1 flex justify-start">
+<div class="h-2 rounded-r-full bg-secondary-team" style="width: 53%"></div>
+</div>
+</div>
+</div>
+<!-- Aces -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-white">6</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Эйсов</span>
+<span class="text-base font-bold text-gray-400">5</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex-1 flex justify-end">
+<div class="h-2 rounded-l-full bg-primary" style="width: 55%"></div>
+</div>
+<div class="w-[1px] h-3 bg-gray-700"></div>
+<div class="flex-1 flex justify-start">
+<div class="h-2 rounded-r-full bg-secondary-team opacity-60" style="width: 45%"></div>
+</div>
+</div>
+</div>
+<!-- Serve Success % -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-primary">89.8%</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">% Усп. подач</span>
+<span class="text-base font-bold text-gray-400">77.9%</span>
+</div>
+<div class="relative h-2 w-full bg-surface-dark rounded-full overflow-hidden">
+<!-- Background guides -->
+<div class="absolute top-0 bottom-0 left-[50%] w-[1px] bg-gray-700 z-10"></div>
+<!-- Bars overlapping from left and right -->
+<div class="absolute top-0 left-0 h-full bg-primary/30 w-full"></div>
+<div class="absolute top-0 left-0 h-full bg-primary z-20 rounded-full" style="width: 89.8%"></div>
+<!-- For comparison visual, simpler stacked bar is better for mobile -->
+</div>
+<!-- Let's revert to the dual bar style for clarity on percentages -->
+<div class="mt-[-8px] flex h-2 w-full bg-surface-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 54%"></div>
+<div class="h-full bg-secondary-team opacity-60" style="width: 46%"></div>
+</div>
+</div>
+<!-- Attack Success % -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-white">43.2%</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">% Усп. атак</span>
+<span class="text-base font-bold text-gray-400">38.4%</span>
+</div>
+<div class="flex h-2 w-full bg-surface-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 53%"></div>
+<div class="h-full bg-secondary-team opacity-60" style="width: 47%"></div>
+</div>
+</div>
+<!-- Block Success % -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-white">33.3%</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">% Усп. блоков</span>
+<span class="text-base font-bold text-gray-400">19%</span>
+</div>
+<div class="flex h-2 w-full bg-surface-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 64%"></div>
+<div class="h-full bg-secondary-team opacity-60" style="width: 36%"></div>
+</div>
+</div>
+<!-- Reception Success % (Opponent Winning this stat) -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1 mb-1">
+<span class="text-base font-bold text-gray-400">53%</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wider">% Усп. приёма</span>
+<span class="text-base font-bold text-secondary-team">62.9%</span>
+</div>
+<div class="flex h-2 w-full bg-surface-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary opacity-60" style="width: 46%"></div>
+<div class="h-full bg-secondary-team" style="width: 54%"></div>
+</div>
+</div>
+</section>
+<!-- Bottom Actions -->
+<div class="flex justify-center mt-4 mb-8">
+<button class="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors">
+<span class="material-icons text-sm">download</span>
+<span>Скачать полный отчет PDF</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (App Shell) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-dark/95 backdrop-blur-lg border-t border-white/5 px-6 py-4 flex justify-between items-center z-50 md:max-w-md md:mx-auto">
+<a class="flex flex-col items-center text-primary group" href="#">
+<span class="material-icons mb-1 group-hover:scale-110 transition-transform">analytics</span>
+<span class="text-[10px] font-medium">Матчи</span>
+</a>
+<a class="flex flex-col items-center text-gray-500 hover:text-gray-300 transition-colors group" href="#">
+<span class="material-icons mb-1 group-hover:scale-110 transition-transform">groups</span>
+<span class="text-[10px] font-medium">Команда</span>
+</a>
+<div class="relative -top-6">
+<button class="bg-primary text-white p-4 rounded-full shadow-[0_4px_20px_rgba(60,131,246,0.4)] hover:bg-primary/90 transition-colors">
+<span class="material-icons">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center text-gray-500 hover:text-gray-300 transition-colors group" href="#">
+<span class="material-icons mb-1 group-hover:scale-110 transition-transform">emoji_events</span>
+<span class="text-[10px] font-medium">Турниры</span>
+</a>
+<a class="flex flex-col items-center text-gray-500 hover:text-gray-300 transition-colors group" href="#">
+<span class="material-icons mb-1 group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium">Профиль</span>
+</a>
+</nav>
+</div>
+</body></html>

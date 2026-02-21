@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>История матчей VolleyStats</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d7ff2",
+                        "primary-dark": "#0b6acb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0F1923", /* Overridden to match specific request #0F1923 */
+                        "surface-dark": "#1A2733",
+                        "accent-green": "#22c55e",
+                        "accent-red": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px" },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'neon': '0 0 10px rgba(13, 127, 242, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom scrollbar for horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel-active {
+            background: rgba(13, 127, 242, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(13, 127, 242, 0.3);
+        }
+
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased min-h-screen pb-24 selection:bg-primary selection:text-white">
+<!-- Header Section -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5 pt-12 pb-4 px-5">
+<div class="flex items-center justify-between mb-4">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">История матчей</h1>
+<div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-icons-round text-sm">history</span>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons-round text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="glass-panel w-full pl-10 pr-4 py-3 rounded-xl text-sm placeholder-gray-500 text-white focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all shadow-glass" placeholder="Поиск по названию команды..." type="text"/>
+</div>
+</header>
+<!-- Filters Section -->
+<div class="pt-4 pb-2">
+<div class="flex overflow-x-auto no-scrollbar px-5 gap-3 pb-2">
+<button class="glass-panel-active whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium text-primary border border-primary/30 shadow-neon">
+                Все
+            </button>
+<button class="glass-panel whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                Сентябрь
+            </button>
+<button class="glass-panel whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                Октябрь
+            </button>
+<button class="glass-panel whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                Сезон 2023/24
+            </button>
+<button class="glass-panel whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                Кубок
+            </button>
+</div>
+</div>
+<!-- Match List -->
+<main class="px-5 space-y-4 mt-2">
+<!-- Card 1: INEX TEAM vs Комус -->
+<article class="glass-panel rounded-2xl p-4 active:scale-[0.98] transition-transform duration-200 cursor-pointer group hover:bg-white/[0.04]">
+<!-- Header Row -->
+<div class="flex justify-between items-center mb-4 text-xs font-medium tracking-wide">
+<div class="flex items-center text-gray-400">
+<span class="material-icons-round text-sm mr-1">calendar_today</span>
+                    14 Окт, 18:30
+                </div>
+<div class="flex items-center space-x-2">
+<span class="px-2.5 py-0.5 rounded-full bg-accent-green/10 text-accent-green border border-accent-green/20">
+                        Завершён
+                    </span>
+</div>
+</div>
+<!-- Main Content: Teams & Score -->
+<div class="flex items-center justify-between mb-5">
+<!-- Team 1 -->
+<div class="flex flex-col items-center w-1/3 text-center">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 mb-2 shadow-lg flex items-center justify-center text-white font-bold text-lg" data-alt="Team INEX logo abstract gradient">I</div>
+<span class="text-sm font-semibold leading-tight line-clamp-2">INEX TEAM</span>
+<span class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Дома</span>
+</div>
+<!-- Score -->
+<div class="flex flex-col items-center justify-center w-1/3">
+<div class="text-3xl font-bold text-white tracking-widest bg-white/5 px-4 py-1 rounded-lg border border-white/10 shadow-inner">
+                        3:0
+                    </div>
+</div>
+<!-- Team 2 -->
+<div class="flex flex-col items-center w-1/3 text-center">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-orange-500 mb-2 shadow-lg flex items-center justify-center text-white font-bold text-lg" data-alt="Team Komus logo abstract gradient">K</div>
+<span class="text-sm font-semibold leading-tight line-clamp-2">Комус</span>
+<span class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Гости</span>
+</div>
+</div>
+<!-- Footer: Set Scores -->
+<div class="border-t border-white/5 pt-3">
+<div class="flex justify-center items-center space-x-2">
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">25:16</span>
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">27:25</span>
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">25:22</span>
+</div>
+</div>
+</article>
+<!-- Card 2: Зенит vs Динамо -->
+<article class="glass-panel rounded-2xl p-4 active:scale-[0.98] transition-transform duration-200 cursor-pointer group hover:bg-white/[0.04]">
+<div class="flex justify-between items-center mb-4 text-xs font-medium tracking-wide">
+<div class="flex items-center text-gray-400">
+<span class="material-icons-round text-sm mr-1">calendar_today</span>
+                    10 Окт, 16:00
+                </div>
+<div class="flex items-center space-x-2">
+<span class="px-2.5 py-0.5 rounded-full bg-accent-green/10 text-accent-green border border-accent-green/20">
+                        Завершён
+                    </span>
+</div>
+</div>
+<div class="flex items-center justify-between mb-5">
+<div class="flex flex-col items-center w-1/3 text-center">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-indigo-600 mb-2 shadow-lg flex items-center justify-center text-white font-bold text-lg" data-alt="Team Zenit logo abstract gradient">Z</div>
+<span class="text-sm font-semibold leading-tight">Зенит</span>
+<span class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Дома</span>
+</div>
+<div class="flex flex-col items-center justify-center w-1/3">
+<div class="text-3xl font-bold text-white tracking-widest bg-white/5 px-4 py-1 rounded-lg border border-white/10 shadow-inner">
+                        2:3
+                    </div>
+</div>
+<div class="flex flex-col items-center w-1/3 text-center">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-white to-blue-200 mb-2 shadow-lg flex items-center justify-center text-blue-900 font-bold text-lg" data-alt="Team Dinamo logo abstract gradient">D</div>
+<span class="text-sm font-semibold leading-tight">Динамо</span>
+<span class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Гости</span>
+</div>
+</div>
+<div class="border-t border-white/5 pt-3">
+<div class="flex justify-center items-center flex-wrap gap-2">
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">25:20</span>
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">20:25</span>
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">25:18</span>
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5">19:25</span>
+<span class="px-2 py-1 rounded-md bg-white/5 text-gray-300 text-xs font-mono border border-white/5 font-bold text-primary">13:15</span>
+</div>
+</div>
+</article>
+<!-- Card 3: Локомотив vs Белогорье (Previous Month) -->
+<article class="glass-panel rounded-2xl p-4 active:scale-[0.98] transition-transform duration-200 cursor-pointer group hover:bg-white/[0.04]">
+<div class="flex justify-between items-center mb-4 text-xs font-medium tracking-wide">
+<div class="flex items-center text-gray-400">
+<span class="material-icons-round text-sm mr-1">calendar_today</span>
+                    28 Сен, 19:00
+                </div>
+<div class="flex items-center space-x-2">
+<span class="px-2.5 py-0.5 rounded-full bg-gray-700/50 text-gray-400 border border-gray-600/30">
+                        Архив
+                    </span>
+</div>
+</div>
+<div class="flex items-center justify-between mb-5">
+<div class="flex flex-col items-center w-1/3 text-center">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-green-600 mb-2 shadow-lg flex items-center justify-center text-white font-bold text-lg" data-alt="Team Lokomotiv logo abstract gradient">L</div>
+<span class="text-sm font-semibold leading-tight">Локо</span>
+</div>
+<div class="flex flex-col items-center justify-center w-1/3">
+<div class="text-3xl font-bold text-gray-300 tracking-widest bg-white/5 px-4 py-1 rounded-lg border border-white/10 shadow-inner">
+                        1:3
+                    </div>
+</div>
+<div class="flex flex-col items-center w-1/3 text-center">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-yellow-500 mb-2 shadow-lg flex items-center justify-center text-white font-bold text-lg" data-alt="Team Belogorie logo abstract gradient">B</div>
+<span class="text-sm font-semibold leading-tight">Белогорье</span>
+</div>
+</div>
+<div class="border-t border-white/5 pt-3">
+<div class="flex justify-center items-center space-x-2 text-gray-500">
+<span class="text-xs">Подробнее о матче →</span>
+</div>
+</div>
+</article>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-background-light/95 dark:bg-[#15202b]/95 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 z-40 pb-safe">
+<div class="flex justify-around items-center h-16 max-w-lg mx-auto">
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-round text-2xl mb-1">dashboard</span>
+<span class="text-[10px] font-medium">Главная</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-primary relative" href="#">
+<div class="absolute -top-[1px] w-12 h-[2px] bg-primary shadow-[0_0_10px_rgba(13,127,242,0.7)] rounded-b-full"></div>
+<span class="material-icons-round text-2xl mb-1">sports_volleyball</span>
+<span class="text-[10px] font-medium">Матчи</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-round text-2xl mb-1">bar_chart</span>
+<span class="text-[10px] font-medium">Статистика</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-gray-300 transition-colors" href="#">
+<span class="material-icons-round text-2xl mb-1">person</span>
+<span class="text-[10px] font-medium">Профиль</span>
+</a>
+</div>
+</nav>
+<!-- Add Safe Area Spacing for Bottom Nav -->
+<div class="h-6"></div>
+</body></html>

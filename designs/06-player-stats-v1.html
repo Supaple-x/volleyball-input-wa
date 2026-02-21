@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Карточка игрока: Мокров Евгений v1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#258cf4",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922", // Matches the deep dark theme
+                        "glass": "rgba(255, 255, 255, 0.05)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Radial Progress Chart SVG animations/styles */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white font-display antialiased min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-background-light dark:bg-[#0F1923] h-[850px] overflow-hidden relative rounded-[2.5rem] shadow-2xl border-4 border-slate-200 dark:border-slate-800 flex flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between p-6 z-10">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-icons">arrow_back_ios_new</span>
+</button>
+<h1 class="text-lg font-semibold tracking-wide text-slate-900 dark:text-white">Статистика игрока</h1>
+<div class="w-10 h-10"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Content Scrollable Area -->
+<main class="flex-1 overflow-y-auto no-scrollbar px-6 pb-8">
+<!-- Hero Profile Card -->
+<div class="glass-panel rounded-3xl p-6 mb-6 relative overflow-hidden group">
+<!-- Background decoration -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-[60px] -mr-10 -mt-10"></div>
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="relative mb-4">
+<div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-primary to-cyan-400">
+<img alt="Profile" class="w-full h-full rounded-full object-cover border-4 border-[#0F1923]" data-alt="Portrait of a male volleyball player looking focused" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVwO3qI95p-6tua8hQUZjHLj5Gs-LSxfeQLXvr-i4Tt4Kt5oEKGkEA5WhUo5YyxM3zDH7wC3D3-aaSDtCljk7eke0zXAMKs9v-Ig_a135_weKH54urr1eXDR1TDexUi1xZxAoxUi0UkXXCzsn3P7RBxjzqu2B5o2M_9LhFubZ_bG6_vOOOyKSSbrrjUvzWq2uSc5o_Z-s2NcSLw2NgNxqzwA4C5n-ugUHdZNIP0zzko3ZgxXq7FSUAp8zalowlfKttDSPOHtDnjcc"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-primary text-white text-xs font-bold w-8 h-8 flex items-center justify-center rounded-full border-4 border-[#0F1923] shadow-lg">
+                            #9
+                        </div>
+</div>
+<h2 class="text-2xl font-bold text-white mb-1">Мокров Евгений</h2>
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
+                        Диагональный
+                    </span>
+<div class="grid grid-cols-3 gap-4 w-full mt-6 border-t border-white/5 pt-4">
+<div class="flex flex-col">
+<span class="text-xs text-slate-400 uppercase tracking-wider">Рост</span>
+<span class="font-semibold text-lg">198 см</span>
+</div>
+<div class="flex flex-col border-l border-white/5">
+<span class="text-xs text-slate-400 uppercase tracking-wider">Возраст</span>
+<span class="font-semibold text-lg">24</span>
+</div>
+<div class="flex flex-col border-l border-white/5">
+<span class="text-xs text-slate-400 uppercase tracking-wider">Игры</span>
+<span class="font-semibold text-lg">18</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Attack Card -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col items-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-cyan-400"></div>
+<div class="flex items-center justify-between w-full mb-3">
+<span class="font-semibold text-white">Атака</span>
+<span class="material-icons text-primary text-sm opacity-80">sports_volleyball</span>
+</div>
+<!-- Circular Chart -->
+<div class="relative w-24 h-24 mb-4">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-slate-700 stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-primary progress-ring__circle stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="115.5" stroke-linecap="round" stroke-width="8"></circle> <!-- 54% -->
+</svg>
+<div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-white">54%</span>
+<span class="text-[10px] text-slate-400">Эфф.</span>
+</div>
+</div>
+<div class="w-full space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Очки</span>
+<span class="font-medium text-white">142</span>
+</div>
+<div class="w-full h-1 bg-slate-700 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 70%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Ошибки</span>
+<span class="font-medium text-red-400">23</span>
+</div>
+</div>
+</div>
+<!-- Reception Card -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col items-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-300"></div>
+<div class="flex items-center justify-between w-full mb-3">
+<span class="font-semibold text-white">Приём</span>
+<span class="material-icons text-emerald-400 text-sm opacity-80">call_received</span>
+</div>
+<!-- Circular Chart -->
+<div class="relative w-24 h-24 mb-4">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-slate-700 stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-emerald-500 progress-ring__circle stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="95.4" stroke-linecap="round" stroke-width="8"></circle> <!-- 62% -->
+</svg>
+<div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-white">62%</span>
+<span class="text-[10px] text-slate-400">Поз.</span>
+</div>
+</div>
+<div class="w-full space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Отлично</span>
+<span class="font-medium text-emerald-400">48%</span>
+</div>
+<div class="w-full h-1 bg-slate-700 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full" style="width: 48%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Ошибки</span>
+<span class="font-medium text-red-400">12</span>
+</div>
+</div>
+</div>
+<!-- Block Card -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col items-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-400"></div>
+<div class="flex items-center justify-between w-full mb-3">
+<span class="font-semibold text-white">Блок</span>
+<span class="material-icons text-amber-500 text-sm opacity-80">pan_tool</span>
+</div>
+<!-- Circular Chart (Count focused) -->
+<div class="relative w-24 h-24 mb-4">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-slate-700 stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-amber-500 progress-ring__circle stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="180" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-white">0.8</span>
+<span class="text-[10px] text-slate-400">Сет</span>
+</div>
+</div>
+<div class="w-full space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Очки</span>
+<span class="font-medium text-white">42</span>
+</div>
+<div class="w-full h-1 bg-slate-700 rounded-full overflow-hidden">
+<div class="bg-amber-500 h-full" style="width: 60%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Касания</span>
+<span class="font-medium text-slate-300">86</span>
+</div>
+</div>
+</div>
+<!-- Serve Card -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col items-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-400"></div>
+<div class="flex items-center justify-between w-full mb-3">
+<span class="font-semibold text-white">Подача</span>
+<span class="material-icons text-purple-400 text-sm opacity-80">wifi_tethering</span>
+</div>
+<!-- Circular Chart -->
+<div class="relative w-24 h-24 mb-4">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-slate-700 stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-purple-500 progress-ring__circle stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="200" stroke-linecap="round" stroke-width="8"></circle> <!-- 20% approx -->
+</svg>
+<div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-white">12%</span>
+<span class="text-[10px] text-slate-400">Эйсы</span>
+</div>
+</div>
+<div class="w-full space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Всего</span>
+<span class="font-medium text-white">312</span>
+</div>
+<div class="w-full h-1 bg-slate-700 rounded-full overflow-hidden">
+<div class="bg-purple-500 h-full" style="width: 85%"></div>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Ошибки</span>
+<span class="font-medium text-red-400">45</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Match History Preview (Optional nice-to-have filler) -->
+<div class="mt-6">
+<h3 class="text-white font-medium mb-3 text-sm ml-1">Последние матчи</h3>
+<div class="space-y-3">
+<div class="glass-panel p-3 rounded-xl flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-[10px] font-bold">VS</div>
+<div>
+<div class="text-sm font-semibold text-white">Зенит Казань</div>
+<div class="text-xs text-slate-400">24 Окт • 3:1 (Win)</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-bold text-primary">24 Очка</div>
+<div class="text-xs text-emerald-400">MVP</div>
+</div>
+</div>
+<div class="glass-panel p-3 rounded-xl flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-[10px] font-bold">VS</div>
+<div>
+<div class="text-sm font-semibold text-white">Динамо Мск</div>
+<div class="text-xs text-slate-400">18 Окт • 2:3 (Loss)</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-bold text-white">18 Очков</div>
+<div class="text-xs text-slate-500">51% Атк</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Tab Bar (Simulated) -->
+<nav class="h-20 glass-panel rounded-t-3xl flex items-center justify-around px-6 absolute bottom-0 w-full z-20">
+<button class="flex flex-col items-center space-y-1 text-primary">
+<span class="material-icons">bar_chart</span>
+<span class="text-[10px] font-medium">Стат</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300">
+<span class="material-icons">calendar_today</span>
+<span class="text-[10px] font-medium">Матчи</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300">
+<span class="material-icons">people</span>
+<span class="text-[10px] font-medium">Команда</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300">
+<span class="material-icons">settings</span>
+<span class="text-[10px] font-medium">Настройки</span>
+</button>
+</nav>
+</div>
+</body></html>

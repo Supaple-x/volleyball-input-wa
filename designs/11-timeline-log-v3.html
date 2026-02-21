@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ход игры и лог событий v3 - VolleyStats</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3c83f6",
+                "background-light": "#f5f7f8",
+                "background-dark": "#0F1923",
+                "surface-dark": "#1a242f",
+              },
+              fontFamily: {
+                "display": ["Lexend"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .glass-pill {
+            background: rgba(60, 131, 246, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .timeline-line {
+            background: linear-gradient(180deg, rgba(60, 131, 246, 0) 0%, rgba(60, 131, 246, 0.5) 15%, rgba(60, 131, 246, 0.5) 85%, rgba(60, 131, 246, 0) 100%);
+        }
+        .ios-safe-top { padding-top: env(safe-area-inset-top); }
+        .ios-safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header Section -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="ios-safe-top"></div>
+<div class="px-4 py-4 flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-icons">arrow_back_ios_new</span>
+</button>
+<h1 class="text-xl font-semibold tracking-tight">Ход игры</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-icons text-primary">more_vert</span>
+</button>
+</div>
+<!-- Set Selector -->
+<div class="px-4 pb-4">
+<div class="flex p-1 bg-primary/5 dark:bg-primary/10 rounded-full border border-primary/10">
+<button class="flex-1 py-2 text-sm font-medium rounded-full bg-primary text-white shadow-lg shadow-primary/20">Сет 1</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-full text-slate-500 dark:text-slate-400">Сет 2</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-full text-slate-500 dark:text-slate-400">Сет 3</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-full text-slate-500 dark:text-slate-400">Все</button>
+</div>
+</div>
+</header>
+<!-- Main Timeline Content -->
+<main class="flex-grow relative px-4 py-6 overflow-x-hidden">
+<!-- Central Axis -->
+<div class="absolute left-1/2 top-0 bottom-0 w-0.5 timeline-line transform -translate-x-1/2"></div>
+<div class="relative space-y-8">
+<!-- Timeline Item: Score Break -->
+<div class="flex justify-center">
+<div class="glass-pill px-4 py-1.5 rounded-full flex items-center gap-3 z-10 shadow-xl border border-primary/20 bg-background-dark/40">
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Начало</span>
+</div>
+</div>
+<!-- Event: Left Side (Home) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="text-right">
+<div class="flex flex-row-reverse items-start gap-3">
+<div class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-primary text-white text-xs font-bold">7</div>
+<div>
+<p class="text-sm font-semibold">Иванов А.</p>
+<p class="text-xs text-green-500 font-medium">Эйс (Подача)</p>
+<p class="text-[10px] text-slate-500 mt-0.5">14:02:15</p>
+</div>
+</div>
+</div>
+<div class="pointer-events-none"></div>
+<!-- Connector Point -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background-dark ring-4 ring-primary/10"></div>
+</div>
+<!-- Score Pill -->
+<div class="flex justify-center">
+<div class="glass-pill px-4 py-1.5 rounded-full flex items-center gap-3 z-10 border border-white/5">
+<span class="text-sm font-bold tracking-tighter">12 : 10</span>
+</div>
+</div>
+<!-- Event: Right Side (Away) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="pointer-events-none"></div>
+<div class="text-left">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-slate-700 text-white text-xs font-bold">14</div>
+<div>
+<p class="text-sm font-semibold">Petrov K.</p>
+<p class="text-xs text-red-500 font-medium">Ошибка (Атака)</p>
+<p class="text-[10px] text-slate-500 mt-0.5">14:03:42</p>
+</div>
+</div>
+</div>
+<!-- Connector Point -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-slate-500 border-2 border-background-dark ring-4 ring-slate-500/10"></div>
+</div>
+<!-- Score Pill -->
+<div class="flex justify-center">
+<div class="glass-pill px-4 py-1.5 rounded-full flex items-center gap-3 z-10 border border-white/5">
+<span class="text-sm font-bold tracking-tighter">13 : 10</span>
+</div>
+</div>
+<!-- Event: Left Side (Home) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="text-right">
+<div class="flex flex-row-reverse items-start gap-3">
+<div class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-primary text-white text-xs font-bold">4</div>
+<div>
+<p class="text-sm font-semibold">Sokolov M.</p>
+<p class="text-xs text-green-500 font-medium">Блок</p>
+<p class="text-[10px] text-slate-500 mt-0.5">14:05:10</p>
+</div>
+</div>
+</div>
+<div class="pointer-events-none"></div>
+<!-- Connector Point -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background-dark ring-4 ring-primary/10"></div>
+</div>
+<!-- Event: Right Side (Away) - Substitution (Non-Scoring) -->
+<div class="relative grid grid-cols-2 gap-8 items-center opacity-70">
+<div class="pointer-events-none"></div>
+<div class="text-left">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-slate-800 text-slate-300 text-[10px]"><span class="material-icons text-sm">sync</span></div>
+<div>
+<p class="text-sm font-medium">Замена</p>
+<p class="text-xs text-slate-400">#3 ⇄ #18</p>
+</div>
+</div>
+</div>
+<!-- Small dot for non-scoring -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-slate-600"></div>
+</div>
+<!-- Event: Right Side (Away) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="pointer-events-none"></div>
+<div class="text-left">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-slate-700 text-white text-xs font-bold">18</div>
+<div>
+<p class="text-sm font-semibold">Volkov D.</p>
+<p class="text-xs text-green-500 font-medium">Атака из 4 зоны</p>
+<p class="text-[10px] text-slate-500 mt-0.5">14:06:55</p>
+</div>
+</div>
+</div>
+<!-- Connector Point -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-slate-500 border-2 border-background-dark ring-4 ring-slate-500/10"></div>
+</div>
+<!-- Score Pill -->
+<div class="flex justify-center">
+<div class="glass-pill px-4 py-1.5 rounded-full flex items-center gap-3 z-10 border border-white/5 bg-primary/10">
+<span class="text-sm font-bold tracking-tighter">14 : 11</span>
+</div>
+</div>
+<!-- Timeout Indicator -->
+<div class="flex justify-center">
+<div class="flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-full">
+<span class="material-icons text-xs text-yellow-500">pause</span>
+<span class="text-[10px] font-bold text-yellow-500 uppercase tracking-widest">Тайм-аут (Хозяева)</span>
+</div>
+</div>
+<!-- Event: Left Side (Home) -->
+<div class="relative grid grid-cols-2 gap-8 items-center">
+<div class="text-right">
+<div class="flex flex-row-reverse items-start gap-3">
+<div class="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-primary text-white text-xs font-bold">22</div>
+<div>
+<p class="text-sm font-semibold">Belov S.</p>
+<p class="text-xs text-red-500 font-medium">Ошибка (Заступ)</p>
+<p class="text-[10px] text-slate-500 mt-0.5">14:09:20</p>
+</div>
+</div>
+</div>
+<div class="pointer-events-none"></div>
+<!-- Connector Point -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background-dark ring-4 ring-primary/10"></div>
+</div>
+<!-- End Score Pill -->
+<div class="flex justify-center">
+<div class="glass-pill px-4 py-1.5 rounded-full flex items-center gap-3 z-10 border border-white/5">
+<span class="text-sm font-bold tracking-tighter">14 : 12</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Footer -->
+<nav class="sticky bottom-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl border-t border-primary/10 ios-safe-bottom">
+<div class="max-w-md mx-auto flex justify-around items-center py-2">
+<button class="flex flex-col items-center gap-1 p-2 text-slate-400">
+<span class="material-icons">leaderboard</span>
+<span class="text-[10px]">Статистика</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 text-primary">
+<div class="relative">
+<span class="material-icons">history</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full ring-2 ring-background-dark"></div>
+</div>
+<span class="text-[10px] font-medium">События</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 text-slate-400">
+<span class="material-icons">groups</span>
+<span class="text-[10px]">Составы</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 text-slate-400">
+<span class="material-icons">settings</span>
+<span class="text-[10px]">Настройки</span>
+</button>
+</div>
+</nav>
+<!-- Background Decoration -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full"></div>
+</div>
+</body></html>

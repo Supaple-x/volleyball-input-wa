@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0F1923"/>
+  <circle cx="256" cy="200" r="100" fill="none" stroke="#3B82F6" stroke-width="8"/>
+  <text x="256" y="220" font-family="Arial" font-size="80" font-weight="bold" fill="#F1F5F9" text-anchor="middle">VS</text>
+  <text x="256" y="380" font-family="Arial" font-size="36" fill="#94A3B8" text-anchor="middle">VolleyStats</text>
+</svg>
