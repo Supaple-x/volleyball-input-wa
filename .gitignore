@@ -11,3 +11,6 @@ dist-node/
 *.db-wal
 *.db-shm
 .claude/
+
+# Large binary files
+description/ffmpeg.exe
