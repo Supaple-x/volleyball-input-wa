@@ -48,11 +48,11 @@ export function ScoreBar({
 
       return {
         serveTotal: serves.length,
-        aces: serves.filter(e => e.result === 'success').length,
+        aces: serves.filter(e => e.meta?.quality === 'ace').length,
         servePressure: serves.filter(e => e.meta?.quality === 'pressure').length,
         serveErrors: serves.filter(e => e.result === 'error').length,
-        attackPlus: attacks.filter(e => e.result === 'success').length,
-        attackMinus: attacks.filter(e => e.result === 'error').length,
+        attackPlus: attacks.filter(e => e.result === 'success' || e.meta?.quality === 'attack_kill').length,
+        attackMinus: attacks.filter(e => e.result === 'error' || e.meta?.quality === 'attack_blocked').length,
         blockPlus: blocks.filter(e => e.result === 'success').length,
         blockMinus: blocks.filter(e => e.result === 'error').length,
         receptionTotal: receptions.length,

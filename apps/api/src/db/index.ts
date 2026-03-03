@@ -64,6 +64,7 @@ export function upsertTeam(team: Team): void {
       logo_url = excluded.logo_url,
       players = excluded.players,
       updated_at = excluded.updated_at
+    WHERE excluded.updated_at > teams.updated_at
   `).run(
     team.id,
     team.name,
@@ -178,6 +179,7 @@ export function upsertMatch(match: Match): void {
       home_substitutions = excluded.home_substitutions,
       away_substitutions = excluded.away_substitutions,
       updated_at = excluded.updated_at
+    WHERE excluded.updated_at > matches.updated_at
   `).run(
     match.id,
     match.date,

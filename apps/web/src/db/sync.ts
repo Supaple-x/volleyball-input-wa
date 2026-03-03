@@ -28,7 +28,7 @@ async function pushToServer(): Promise<void> {
   })
 }
 
-/** Pull all data from the server and merge into IndexedDB */
+/** Merge server records into IndexedDB, keeping whichever copy is newer (by updatedAt) */
 async function pullFromServer(): Promise<void> {
   const res = await fetch(`${API_BASE}/sync`)
   if (!res.ok) return
@@ -36,8 +36,20 @@ async function pullFromServer(): Promise<void> {
   const data: SyncPayload = await res.json()
 
   await db.transaction('rw', [db.teams, db.matches, db.matchEvents, db.specialEvents, db.rallies], async () => {
-    if (data.teams.length) await db.teams.bulkPut(data.teams)
-    if (data.matches.length) await db.matches.bulkPut(data.matches)
+    // Teams & Matches: merge by updatedAt (keep newer)
+    for (const serverTeam of data.teams) {
+      const local = await db.teams.get(serverTeam.id)
+      if (!local || serverTeam.updatedAt > local.updatedAt) {
+        await db.teams.put(serverTeam)
+      }
+    }
+    for (const serverMatch of data.matches) {
+      const local = await db.matches.get(serverMatch.id)
+      if (!local || serverMatch.updatedAt > local.updatedAt) {
+        await db.matches.put(serverMatch)
+      }
+    }
+    // Events, SpecialEvents, Rallies: insert-only (immutable records)
     if (data.events.length) await db.matchEvents.bulkPut(data.events)
     if (data.specialEvents.length) await db.specialEvents.bulkPut(data.specialEvents)
     if (data.rallies?.length) await db.rallies.bulkPut(data.rallies)

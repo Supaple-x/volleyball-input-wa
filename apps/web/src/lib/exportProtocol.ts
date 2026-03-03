@@ -16,9 +16,9 @@ function computePlayerStats(
   const receptions = pe.filter((e) => e.action === 'reception')
   const defense = pe.filter((e) => e.action === 'defense')
 
-  const serveAces = serves.filter((e) => e.result === 'success').length
+  const serveAces = serves.filter((e) => e.meta?.quality === 'ace').length
   const serveErrors = serves.filter((e) => e.result === 'error').length
-  const attackPoints = attacks.filter((e) => e.result === 'success').length
+  const attackPoints = attacks.filter((e) => e.result === 'success' || e.meta?.quality === 'attack_kill').length
   const attackErrors = attacks.filter((e) => e.result === 'error' && e.meta?.quality !== 'attack_blocked').length
   const attackBlocked = attacks.filter((e) => e.meta?.quality === 'attack_blocked').length
   const blockPoints = blocks.filter((e) => e.result === 'success').length

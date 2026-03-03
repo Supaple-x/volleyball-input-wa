@@ -20,7 +20,139 @@ import { ScoreBar } from '@/components/live/ScoreBar'
 import { DualCourtView } from '@/components/live/DualCourtView'
 import { EventFeed } from '@/components/live/EventFeed'
 import { SetupLineupModal } from '@/components/live/SetupLineupModal'
-import { Undo2, Menu, X } from 'lucide-react'
+import { Undo2, Menu, X, ArrowRightLeft } from 'lucide-react'
+import type { Player, SpecialEvent } from '@volleystats/shared'
+
+// ─── Substitution helpers ───────────────────────────────────────
+
+function getSubstitutionHistory(specialEvents: SpecialEvent[], currentSet: number) {
+  return specialEvents
+    .filter((e) => e.type === 'substitution' && e.setNumber === currentSet)
+    .map((e) => ({ out: e.meta?.playerOut ?? '', in: e.meta?.playerIn ?? '' }))
+}
+
+function getEligibleBenchPlayers(
+  allPlayers: Player[],
+  onCourtIds: Set<string>,
+  liberoIds: string[],
+  subHistory: { out: string; in: string }[],
+  outPlayerId: string,
+): Player[] {
+  return allPlayers.filter((p) => {
+    if (onCourtIds.has(p.id)) return false
+    if (liberoIds.includes(p.id)) return false
+
+    // This player was subbed out before → can only return for whoever replaced them
+    const pairWhereWasOut = subHistory.find((s) => s.out === p.id)
+    if (pairWhereWasOut) return pairWhereWasOut.in === outPlayerId
+
+    // outPlayer came in as a sub → only the original player can return
+    const pairWhereOutCameIn = subHistory.find((s) => s.in === outPlayerId)
+    if (pairWhereOutCameIn) return p.id === pairWhereOutCameIn.out
+
+    return true
+  })
+}
+
+// ─── Substitution Modal ─────────────────────────────────────────
+
+function SubstitutionModal({
+  match,
+  homeTeam,
+  specialEvents,
+  onConfirm,
+  onCancel,
+}: {
+  match: Match
+  homeTeam: Team
+  specialEvents: SpecialEvent[]
+  onConfirm: (playerOutId: string, playerInId: string) => void
+  onCancel: () => void
+}) {
+  const [playerOutId, setPlayerOutId] = useState<string | null>(null)
+
+  const liberoIds = getLiberoIds(match)
+  const onCourtIds = new Set(match.homeLineup.map((e) => e.playerId))
+  const subHistory = getSubstitutionHistory(specialEvents, match.currentSet)
+
+  // Step 1: players on court (excluding active libero)
+  const courtPlayers = match.homeLineup
+    .filter((e) => !e.isLibero)
+    .map((e) => ({
+      entry: e,
+      player: homeTeam.players.find((p) => p.id === e.playerId),
+    }))
+    .filter(({ player }) => !!player)
+    .sort((a, b) => a.entry.zone - b.entry.zone)
+
+  // Step 2: eligible bench players for selected outPlayer
+  const benchPlayers = playerOutId
+    ? getEligibleBenchPlayers(homeTeam.players, onCourtIds, liberoIds, subHistory, playerOutId)
+        .sort((a, b) => a.number - b.number)
+    : []
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="mx-4 w-full max-w-sm rounded-2xl glass-light p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-bold">
+            {playerOutId ? 'Кого выпустить?' : 'Кого снять?'}
+          </h3>
+          <button onClick={onCancel} className="p-2 rounded-full hover:bg-surface-light">
+            <X size={18} className="text-text-muted" />
+          </button>
+        </div>
+
+        {!playerOutId ? (
+          /* Step 1: Select player to take off */
+          <div className="space-y-2">
+            {courtPlayers.map(({ entry, player }) => (
+              <button
+                key={entry.playerId}
+                onClick={() => setPlayerOutId(entry.playerId)}
+                className="flex w-full items-center gap-3 rounded-xl border border-border px-4 py-3 text-left transition hover:bg-surface-light active:scale-[0.98]"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary">
+                  {player!.number}
+                </span>
+                <span className="flex-1 text-sm text-text-primary">{player!.lastName} {player!.firstName}</span>
+                <span className="text-xs text-text-muted">з.{entry.zone}</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          /* Step 2: Select player to put in */
+          <div className="space-y-2">
+            <button
+              onClick={() => setPlayerOutId(null)}
+              className="mb-2 text-xs text-primary hover:underline"
+            >
+              &larr; Назад
+            </button>
+            {benchPlayers.length > 0 ? (
+              benchPlayers.map((player) => (
+                <button
+                  key={player.id}
+                  onClick={() => onConfirm(playerOutId, player.id)}
+                  className="flex w-full items-center gap-3 rounded-xl border border-border px-4 py-3 text-left transition hover:bg-surface-light active:scale-[0.98]"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-success/20 text-sm font-bold text-success">
+                    {player.number}
+                  </span>
+                  <span className="flex-1 text-sm text-text-primary">{player.lastName} {player.firstName}</span>
+                </button>
+              ))
+            ) : (
+              <p className="text-sm text-text-muted text-center py-4">
+                Нет доступных игроков для замены
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 // ─── End Set Modal ──────────────────────────────────────────────
 
@@ -66,13 +198,16 @@ function EndSetModal({
 function SideMenu({
   onClose,
   onTimeout,
+  onSubstitution,
   match,
 }: {
   onClose: () => void
   onTimeout: (team: 'home' | 'away') => void
-  match: { homeTimeouts: number; awayTimeouts: number }
+  onSubstitution: () => void
+  match: { homeTimeouts: number; awayTimeouts: number; homeSubstitutions: number }
 }) {
   const maxTO = VOLLEYBALL_RULES.MAX_TIMEOUTS_PER_SET
+  const maxSub = VOLLEYBALL_RULES.MAX_SUBSTITUTIONS_PER_SET
   return (
     <div className="fixed inset-0 z-[90]">
       <div className="absolute inset-0" onClick={onClose} />
@@ -105,6 +240,21 @@ function SideMenu({
             )}
           >
             Гости ({match.awayTimeouts}/{maxTO})
+          </button>
+        </div>
+
+        <div className="mt-6 space-y-3">
+          <h4 className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">Замены</h4>
+          <button
+            onClick={onSubstitution}
+            disabled={match.homeSubstitutions >= maxSub}
+            className={cn(
+              'flex w-full items-center gap-2 rounded-xl border border-border px-4 py-3 text-left text-sm transition active:scale-[0.98]',
+              match.homeSubstitutions >= maxSub ? 'opacity-40' : 'hover:bg-surface-light',
+            )}
+          >
+            <ArrowRightLeft size={16} className="text-text-muted" />
+            Хозяева ({match.homeSubstitutions}/{maxSub})
           </button>
         </div>
       </div>
@@ -248,7 +398,10 @@ export function LiveMatchPage() {
     executeRallyAction,
     cancelRally,
     undoLastRallyAction,
+    undoLastRally,
     addSpecialEvent,
+    specialEvents,
+    rallies,
     notification,
     clearNotification,
   } = useMatchStore()
@@ -266,6 +419,7 @@ export function LiveMatchPage() {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
   const [showEndSetModal, setShowEndSetModal] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
+  const [showSubstitutionModal, setShowSubstitutionModal] = useState(false)
   const [showSetupLineup, setShowSetupLineup] = useState(false)
 
   useEffect(() => {
@@ -293,6 +447,15 @@ export function LiveMatchPage() {
     const set = match.sets.find((s) => s.number === match.currentSet)
     return { home: set?.scoreHome ?? 0, away: set?.scoreAway ?? 0 }
   }, [match])
+
+  const hasRalliesToUndo = useMemo(() => {
+    if (!match) return false
+    return rallies.some((r) => r.setNumber === match.currentSet)
+  }, [rallies, match])
+
+  const canUndo = currentRally
+    ? currentRally.events.length > 0
+    : hasRalliesToUndo
 
   const rallyPhase: RallyPhase = currentRally?.phase ?? 'idle'
   const servingTeamId = currentRally?.servingTeamId ?? match?.servingTeamId ?? match?.homeTeamId ?? ''
@@ -362,8 +525,10 @@ export function LiveMatchPage() {
       await undoLastRallyAction()
     } else if (currentRally && currentRally.events.length === 0) {
       cancelRally()
+    } else {
+      await undoLastRally()
     }
-  }, [currentRally, undoLastRallyAction, cancelRally])
+  }, [currentRally, undoLastRallyAction, cancelRally, undoLastRally])
 
   const handleEndSet = useCallback(async () => {
     if (!match) return
@@ -512,6 +677,35 @@ export function LiveMatchPage() {
     })
   }, [match, updateMatch, addSpecialEvent])
 
+  const handleSubstitution = useCallback(async (playerOutId: string, playerInId: string) => {
+    if (!match) return
+
+    const newLineup = match.homeLineup.map((e) =>
+      e.playerId === playerOutId
+        ? { ...e, playerId: playerInId, isLibero: false }
+        : e,
+    )
+
+    await updateMatch({
+      ...match,
+      homeLineup: newLineup,
+      homeSubstitutions: match.homeSubstitutions + 1,
+    })
+
+    await addSpecialEvent({
+      id: generateId(),
+      matchId: match.id,
+      setNumber: match.currentSet,
+      timestamp: Date.now(),
+      teamId: match.homeTeamId,
+      type: 'substitution',
+      meta: { playerIn: playerInId, playerOut: playerOutId },
+    })
+
+    setShowSubstitutionModal(false)
+    setShowMenu(false)
+  }, [match, updateMatch, addSpecialEvent])
+
   // ─── Loading / Error ──────────────────────────────────────
 
   if (loading || !match) {
@@ -622,10 +816,10 @@ export function LiveMatchPage() {
       <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between border-t border-border bg-background/90 px-4 py-2 pb-safe backdrop-blur-xl">
         <button
           onClick={handleUndo}
-          disabled={!currentRally || currentRally.events.length === 0}
+          disabled={!canUndo}
           className={cn(
             'flex h-12 w-12 items-center justify-center rounded-full glass transition-all active:scale-95',
-            (!currentRally || currentRally.events.length === 0) && 'opacity-30',
+            !canUndo && 'opacity-30',
           )}
         >
           <Undo2 size={20} className="text-text-secondary" />
@@ -667,7 +861,21 @@ export function LiveMatchPage() {
         <SideMenu
           onClose={() => setShowMenu(false)}
           onTimeout={handleTimeout}
+          onSubstitution={() => {
+            setShowMenu(false)
+            setShowSubstitutionModal(true)
+          }}
           match={match}
+        />
+      )}
+
+      {showSubstitutionModal && homeTeam && (
+        <SubstitutionModal
+          match={match}
+          homeTeam={homeTeam}
+          specialEvents={specialEvents}
+          onConfirm={handleSubstitution}
+          onCancel={() => setShowSubstitutionModal(false)}
         />
       )}
 

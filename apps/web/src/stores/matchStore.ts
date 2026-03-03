@@ -7,6 +7,7 @@ import {
   processAction,
   buildRallyRecord,
   rotateLineup,
+  reverseRotateLineup,
   autoSwapLiberoOut,
   isSetWon,
   isTiebreakSet,
@@ -43,6 +44,7 @@ interface MatchState {
   ) => Promise<void>
   cancelRally: () => void
   undoLastRallyAction: () => Promise<void>
+  undoLastRally: () => Promise<void>
 
   // Special events
   addSpecialEvent: (event: SpecialEvent) => Promise<void>
@@ -128,7 +130,17 @@ export const useMatchStore = create<MatchState>((set, get) => ({
       await db.matchEvents.add(event)
     }
 
-    const allRallyEvents = [...currentRally.events, ...outcome.newEvents]
+    // Persist retroactively updated events (e.g., opponent serve quality from reception)
+    for (const event of outcome.updatedEvents) {
+      await db.matchEvents.put(event)
+    }
+
+    // Apply updates to rally events: replace old versions with updated ones
+    const updatedIds = new Set(outcome.updatedEvents.map((e) => e.id))
+    const mergedPrevEvents = currentRally.events.map(
+      (e) => outcome.updatedEvents.find((u) => u.id === e.id) || e,
+    )
+    const allRallyEvents = [...mergedPrevEvents, ...outcome.newEvents]
     const updatedRally: RallyState = {
       ...currentRally,
       phase: outcome.newPhase,
@@ -221,9 +233,11 @@ export const useMatchStore = create<MatchState>((set, get) => ({
         }
 
         await db.matches.put(finalMatch)
+        // Merge updated + new events into state
+        const mergedEvents = events.map((e) => updatedIds.has(e.id) ? outcome.updatedEvents.find((u) => u.id === e.id)! : e)
         set({
           currentMatch: finalMatch,
-          events: [...events, ...outcome.newEvents],
+          events: [...mergedEvents, ...outcome.newEvents],
           specialEvents: [...get().specialEvents, ...autoSwapEvents],
           rallies: [...get().rallies, rallyRecord],
           currentRally: null,
@@ -233,9 +247,10 @@ export const useMatchStore = create<MatchState>((set, get) => ({
       } else {
         // Rally continues
         await db.matches.put(updatedMatch)
+        const mergedEvents = events.map((e) => updatedIds.has(e.id) ? outcome.updatedEvents.find((u) => u.id === e.id)! : e)
         set({
           currentMatch: updatedMatch,
-          events: [...events, ...outcome.newEvents],
+          events: [...mergedEvents, ...outcome.newEvents],
           currentRally: updatedRally,
         })
       }
@@ -314,6 +329,120 @@ export const useMatchStore = create<MatchState>((set, get) => ({
       currentRally: { ...currentRally, phase: newPhase, events: rallyEvents },
       events: events.filter((e) => !eventsToRemove.includes(e.id)),
       currentMatch: updatedMatch,
+    })
+  },
+
+  undoLastRally: async () => {
+    const { currentMatch, events, rallies, specialEvents, rallyCount } = get()
+    if (!currentMatch || rallies.length === 0) return
+
+    // Find last rally in current set
+    const setRallies = rallies.filter((r) => r.setNumber === currentMatch.currentSet)
+    if (setRallies.length === 0) return
+    const lastRally = setRallies[setRallies.length - 1]
+
+    // Delete rally events from DB
+    const rallyEventIds = events.filter((e) => e.rallyId === lastRally.id).map((e) => e.id)
+    for (const id of rallyEventIds) {
+      await db.matchEvents.delete(id)
+    }
+    await db.rallies.delete(lastRally.id)
+
+    // Restore score
+    let restoredMatch: Match = {
+      ...currentMatch,
+      sets: currentMatch.sets.map((s) =>
+        s.number === currentMatch.currentSet
+          ? { ...s, scoreHome: lastRally.scoreHomeBefore, scoreAway: lastRally.scoreAwayBefore }
+          : s,
+      ),
+    }
+
+    // Detect side-out: point won by receiving team
+    const wasSideOut =
+      lastRally.pointWonByTeamId !== null &&
+      lastRally.pointWonByTeamId !== lastRally.servingTeamId
+
+    if (wasSideOut) {
+      // Restore serving team
+      restoredMatch.servingTeamId = lastRally.servingTeamId
+
+      // Reverse rotation on the team that was rotated (= team that won the point = new serving team)
+      const rotatedTeamIsHome = lastRally.pointWonByTeamId === currentMatch.homeTeamId
+
+      if (rotatedTeamIsHome) {
+        restoredMatch.homeLineup = reverseRotateLineup(currentMatch.homeLineup)
+
+        // Undo auto-libero swaps: find libero_out events with 'auto' description after rally timestamp
+        const autoLiberoEvents = specialEvents.filter(
+          (se) =>
+            se.type === 'libero_out' &&
+            se.meta?.description === 'auto' &&
+            se.setNumber === currentMatch.currentSet &&
+            se.timestamp >= lastRally.timestamp - 1000,
+        )
+
+        if (autoLiberoEvents.length > 0) {
+          let lineup = restoredMatch.homeLineup
+          const replacements = { ...(currentMatch.homeLiberoReplacements || {}) }
+
+          for (const event of autoLiberoEvents) {
+            const liberoId = event.meta!.playerOut!
+            const replacedPlayerId = event.meta!.playerIn!
+
+            // Put libero back on court
+            lineup = lineup.map((e) =>
+              e.playerId === replacedPlayerId
+                ? { ...e, playerId: liberoId, isLibero: true }
+                : e,
+            )
+            replacements[liberoId] = replacedPlayerId
+
+            await db.specialEvents.delete(event.id)
+          }
+
+          restoredMatch.homeLineup = lineup
+          restoredMatch.homeLiberoReplacements =
+            Object.keys(replacements).length > 0 ? replacements : undefined
+
+          // Restore legacy field if first libero was swapped out
+          if (currentMatch.homeLiberoId) {
+            const firstLiberoEvent = autoLiberoEvents.find(
+              (e) => e.meta?.playerOut === currentMatch.homeLiberoId,
+            )
+            if (firstLiberoEvent) {
+              restoredMatch.homeLiberoReplacedPlayerId = firstLiberoEvent.meta!.playerIn!
+            }
+          }
+        }
+      } else {
+        restoredMatch.awayLineup = reverseRotateLineup(currentMatch.awayLineup)
+      }
+    }
+
+    restoredMatch.updatedAt = new Date().toISOString()
+    await db.matches.put(restoredMatch)
+
+    // Remove auto-libero events from state
+    const autoEventIds = new Set(
+      specialEvents
+        .filter(
+          (se) =>
+            se.type === 'libero_out' &&
+            se.meta?.description === 'auto' &&
+            se.setNumber === currentMatch.currentSet &&
+            se.timestamp >= lastRally.timestamp - 1000,
+        )
+        .map((se) => se.id),
+    )
+
+    set({
+      currentMatch: restoredMatch,
+      events: events.filter((e) => e.rallyId !== lastRally.id),
+      rallies: rallies.filter((r) => r.id !== lastRally.id),
+      specialEvents: specialEvents.filter((se) => !autoEventIds.has(se.id)),
+      rallyCount: rallyCount - 1,
+      notification: `Розыгрыш #${lastRally.rallyNumber} отменён`,
     })
   },
 

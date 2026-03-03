@@ -247,6 +247,7 @@ export function NewMatchPage() {
 
   const [homeTeamId, setHomeTeamId] = useState('')
   const [awayTeamId, setAwayTeamId] = useState('')
+  const [matchDate, setMatchDate] = useState('')
   const [homeLineup, setHomeLineup] = useState<LineupState>(EMPTY_LINEUP)
   const [servingTeam, setServingTeam] = useState<'home' | 'away' | null>(null)
   const [pickerZone, setPickerZone] = useState<CourtZone | null>(null)
@@ -334,9 +335,11 @@ export function NewMatchPage() {
       awayLineup: awayEntries,
     }
 
+    const matchDateISO = matchDate ? new Date(matchDate).toISOString() : new Date().toISOString()
+
     const match: Match = {
       id: generateId(),
-      date: new Date().toISOString(),
+      date: matchDateISO,
       homeTeamId,
       awayTeamId,
       sets: [initialSet],
@@ -389,6 +392,29 @@ export function NewMatchPage() {
           disabledId={homeTeamId}
           onSelect={handleAwayTeamChange}
         />
+      </div>
+
+      {/* Date & Time */}
+      <div className="mb-6">
+        <label className="mb-1.5 block text-xs font-medium text-text-muted">Дата и время</label>
+        <div className="flex gap-2">
+          <input
+            type="datetime-local"
+            value={matchDate}
+            onChange={(e) => setMatchDate(e.target.value)}
+            className="min-w-0 flex-1 rounded-xl border border-border bg-surface-light px-4 py-3 text-sm text-text-primary outline-none transition focus:border-primary"
+          />
+          <button
+            onClick={() => {
+              const now = new Date()
+              now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+              setMatchDate(now.toISOString().slice(0, 16))
+            }}
+            className="shrink-0 rounded-xl border border-border px-4 py-3 text-sm font-medium text-text-secondary transition hover:bg-surface-light active:scale-[0.98]"
+          >
+            Сейчас
+          </button>
+        </div>
       </div>
 
       {homeTeamId && awayTeamId && homeTeam && awayTeam && (

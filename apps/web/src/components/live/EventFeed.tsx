@@ -101,6 +101,8 @@ function getQualityLabel(event: MatchEvent): string {
     half: '=',
     reception_error: 'Ош.приёма',
     attack_error: 'Ош.атаки',
+    net_error: 'Другая ош.',
+    out_error: 'Аут',
     attack_blocked: 'Уд.в блок',
     block_error: 'Ош.блока',
     defense_error: 'Ош.защиты',

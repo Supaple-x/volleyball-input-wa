@@ -131,11 +131,11 @@ function computeStatsFromEvents(
     const receptions = teamEvents.filter((e) => e.action === 'reception')
     const defense = teamEvents.filter((e) => e.action === 'defense')
 
-    const aces = serves.filter((e) => e.result === 'success').length
+    const aces = serves.filter((e) => e.meta?.quality === 'ace').length
     const serveErrors = serves.filter((e) => e.result === 'error').length
     const servePressure = serves.filter((e) => e.meta?.quality === 'pressure').length
     const serveInPlay = serves.filter((e) => e.meta?.quality === 'in_play').length
-    const attackPoints = attacks.filter((e) => e.result === 'success').length
+    const attackPoints = attacks.filter((e) => e.result === 'success' || e.meta?.quality === 'attack_kill').length
     const attackErrors = attacks.filter((e) => e.result === 'error' && e.meta?.quality !== 'attack_blocked').length
     const attackBlocked = attacks.filter((e) => e.meta?.quality === 'attack_blocked').length
     const blockPoints = blocks.filter((e) => e.result === 'success').length

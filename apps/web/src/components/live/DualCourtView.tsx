@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import type { Player, CourtZone, LineupEntry, Team, RallyPhase, ActionType, ActionResult } from '@volleystats/shared'
 import { cn } from '@/lib/utils'
 import { isAwayPlayerId, getAwayPlayerShortName } from '@/lib/awayPlayers'
 import { getAvailableActions, getAwayAvailableActions } from '@/lib/matchEngine'
+import type { ActionConfig } from '@/lib/matchEngine'
 
 const HORIZONTAL_ROWS: readonly [CourtZone, CourtZone][] = [
   [5, 4],
@@ -104,6 +105,8 @@ function ActionPopover({
   receivingTeamId: string
   onAction: (action: ActionType, result: ActionResult, quality?: string) => void
 }) {
+  const [pendingParent, setPendingParent] = useState<ActionConfig | null>(null)
+
   const phaseActions = isAway
     ? getAwayAvailableActions(phase, servingTeamId, zone)
     : getAvailableActions(phase, servingTeamId, receivingTeamId, zone)
@@ -119,6 +122,21 @@ function ActionPopover({
     v === 'neutral' && 'bg-white/10 text-text-secondary',
   )
 
+  const handleAction = (e: React.MouseEvent, a: ActionConfig) => {
+    e.stopPropagation()
+    if (a.subOptions) {
+      setPendingParent(a)
+    } else {
+      onAction(a.action, a.result, a.quality)
+    }
+  }
+
+  const handleSubAction = (e: React.MouseEvent, sub: ActionConfig) => {
+    e.stopPropagation()
+    onAction(sub.action, sub.result, sub.quality)
+    setPendingParent(null)
+  }
+
   let content: React.ReactNode
   let width: string
 
@@ -129,7 +147,7 @@ function ActionPopover({
     content = (
       <div className={cn('grid gap-1', cols)}>
         {allActions.map(a => (
-          <button key={a.quality} onClick={(e) => { e.stopPropagation(); onAction(a.action, a.result, a.quality) }} className={btnCls(a.variant)}>
+          <button key={a.quality} onClick={(e) => handleAction(e, a)} className={btnCls(a.variant)}>
             {a.label}
           </button>
         ))}
@@ -137,12 +155,11 @@ function ActionPopover({
     )
   } else if (phase === 'reception') {
     if (allActions.length <= 3) {
-      // Away simplified reception: 2 buttons side by side
       width = 'w-[110px]'
       content = (
         <div className={cn('grid gap-1', `grid-cols-${allActions.length}`)}>
           {allActions.map(a => (
-            <button key={a.quality} onClick={(e) => { e.stopPropagation(); onAction(a.action, a.result, a.quality) }} className={btnCls(a.variant)}>
+            <button key={a.quality} onClick={(e) => handleAction(e, a)} className={btnCls(a.variant)}>
               {a.label}
             </button>
           ))}
@@ -155,14 +172,14 @@ function ActionPopover({
         <div className="space-y-1">
           <div className="grid grid-cols-4 gap-1">
             {allActions.slice(0, 4).map(a => (
-              <button key={a.quality} onClick={(e) => { e.stopPropagation(); onAction(a.action, a.result, a.quality) }} className={btnCls(a.variant)}>
+              <button key={a.quality} onClick={(e) => handleAction(e, a)} className={btnCls(a.variant)}>
                 {a.label}
               </button>
             ))}
           </div>
           <div className="grid grid-cols-3 gap-1">
             {allActions.slice(4).map(a => (
-              <button key={a.quality} onClick={(e) => { e.stopPropagation(); onAction(a.action, a.result, a.quality) }} className={btnCls(a.variant)}>
+              <button key={a.quality} onClick={(e) => handleAction(e, a)} className={btnCls(a.variant)}>
                 {a.label}
               </button>
             ))}
@@ -179,15 +196,45 @@ function ActionPopover({
       }))
     )
     width = labeledActions.length > 6 ? 'w-[160px]' : 'w-[140px]'
-    content = (
-      <div className="grid grid-cols-3 gap-1">
-        {labeledActions.map(a => (
-          <button key={`${a.action}-${a.result}-${a.quality || ''}`} onClick={(e) => { e.stopPropagation(); onAction(a.action, a.result, a.quality) }} className={btnCls(a.variant)}>
-            {a.label}
+
+    if (pendingParent) {
+      // Sub-level: show specific error options
+      content = (
+        <div className="space-y-1.5">
+          <button
+            onClick={(e) => { e.stopPropagation(); setPendingParent(null) }}
+            className="flex items-center gap-1 text-[9px] text-text-muted hover:text-text-secondary"
+          >
+            ← {pendingParent.label}
           </button>
-        ))}
-      </div>
-    )
+          <div className="grid grid-cols-2 gap-1">
+            {pendingParent.subOptions!.map(sub => (
+              <button
+                key={sub.quality}
+                onClick={(e) => handleSubAction(e, sub)}
+                className={btnCls(sub.variant)}
+              >
+                {sub.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )
+    } else {
+      content = (
+        <div className="grid grid-cols-3 gap-1">
+          {labeledActions.map(a => (
+            <button
+              key={`${a.action}-${a.result}-${a.quality || ''}`}
+              onClick={(e) => handleAction(e, a)}
+              className={btnCls(a.variant)}
+            >
+              {a.label}
+            </button>
+          ))}
+        </div>
+      )
+    }
   }
 
   return (
