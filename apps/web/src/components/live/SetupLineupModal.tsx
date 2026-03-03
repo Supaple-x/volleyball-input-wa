@@ -158,8 +158,8 @@ export function SetupLineupModal({
 
       {/* Player picker */}
       {pickerZone !== null && (
-        <div className="fixed inset-0 z-[110] flex items-end justify-center bg-black/40" onClick={() => setPickerZone(null)}>
-          <div className="w-full max-w-md rounded-t-2xl border border-border bg-surface p-4 pb-safe" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 px-4" onClick={() => setPickerZone(null)}>
+          <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-4" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between">
               <span className="text-sm font-semibold">Зона {pickerZone}</span>
               <button onClick={() => setPickerZone(null)} className="p-1">

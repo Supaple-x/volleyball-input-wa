@@ -1,8 +1,48 @@
 import { useMemo } from 'react'
-import type { MatchEvent, Team } from '@volleystats/shared'
+import type { MatchEvent, Team, LineupEntry } from '@volleystats/shared'
 import { ACTION_LABELS } from '@volleystats/shared'
 import { cn } from '@/lib/utils'
 import { isAwayPlayerId, getAwayPlayerDisplayName } from '@/lib/awayPlayers'
+
+// ─── Result label ────────────────────────────────────────────────
+
+function getResultLabel(event: MatchEvent): { label: string; variant: 'success' | 'error' | 'neutral' | 'point' } {
+  const q = event.meta?.quality
+  const result = event.result
+
+  const QUALITY_MAP: Record<string, { label: string; variant: 'success' | 'error' | 'neutral' | 'point' }> = {
+    ace:            { label: 'Эйс',           variant: 'success' },
+    pressure:       { label: 'Услож',         variant: 'neutral' },
+    in_play:        { label: 'В игру',        variant: 'neutral' },
+    serve_error:    { label: 'Ошиб. подачи', variant: 'error'   },
+    excellent:      { label: '++',            variant: 'success' },
+    positive:       { label: '+',             variant: 'success' },
+    ok:             { label: '!',             variant: 'neutral' },
+    negative:       { label: '−',             variant: 'neutral' },
+    over:           { label: '/',             variant: 'neutral' },
+    half:           { label: '=',             variant: 'neutral' },
+    reception_error:{ label: 'Ошиб. приёма', variant: 'error'   },
+    attack_kill:    { label: 'Оч. атаки',    variant: 'point'   },
+    attack_blocked: { label: 'Уд. в блок',   variant: 'error'   },
+    attack_error:   { label: 'Ошиб. атаки',  variant: 'error'   },
+    out_error:      { label: 'Аут',           variant: 'error'   },
+    net_error:      { label: 'В сетку',       variant: 'error'   },
+    block_error:    { label: 'Ошиб. блока',  variant: 'error'   },
+    soft:           { label: 'Смягч.',        variant: 'neutral' },
+    touch:          { label: 'Касание',       variant: 'neutral' },
+    defense_error:  { label: 'Ошиб. защиты', variant: 'error'   },
+    setting_error:  { label: 'Ошиб. пас.',   variant: 'error'   },
+  }
+
+  if (q && QUALITY_MAP[q]) return QUALITY_MAP[q]
+  if (result === 'success') {
+    if (event.action === 'defense')   return { label: 'Поднял', variant: 'neutral' }
+    if (event.action === 'reception') return { label: '+',       variant: 'success' }
+    return { label: 'Очко', variant: 'success' }
+  }
+  if (result === 'error')   return { label: 'Ошибка', variant: 'error' }
+  return { label: 'В игру', variant: 'neutral' }
+}
 
 // ─── Compact Timeline Card ──────────────────────────────────────
 
@@ -11,17 +51,24 @@ function MiniTimelineCard({
   playerName,
   playerNumber,
   isHome,
+  zone,
 }: {
   event: MatchEvent
   playerName: string
   playerNumber: string
   isHome: boolean
+  zone?: number
 }) {
-  const isSuccess = event.result === 'success'
-  const isError = event.result === 'error'
+  const actionName = ACTION_LABELS[event.action] ?? event.action
+  const { label: resultLabel, variant } = getResultLabel(event)
 
-  const qualityLabel = getQualityLabel(event)
-  const actionLabel = qualityLabel || ACTION_LABELS[event.action]
+  const badgeCn = cn(
+    'inline-block rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider',
+    variant === 'success' && 'bg-success/20 text-success',
+    variant === 'point'   && 'bg-success/20 text-success',
+    variant === 'error'   && 'bg-error/20 text-error',
+    variant === 'neutral' && 'bg-white/10 text-text-muted',
+  )
 
   return (
     <div
@@ -31,14 +78,12 @@ function MiniTimelineCard({
         isHome ? 'border-r-[3px] border-r-primary' : 'border-l-[3px] border-l-pink-500',
       )}
     >
+      {/* Row 1: badge + name */}
       <div className={cn('flex items-center gap-2', isHome ? 'flex-row-reverse' : 'flex-row')}>
-        {/* Player badge */}
         <div
           className={cn(
             'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white shadow-md',
-            isHome
-              ? 'bg-primary shadow-primary/30'
-              : 'bg-pink-500 shadow-pink-500/30',
+            isHome ? 'bg-primary shadow-primary/30' : 'bg-pink-500 shadow-pink-500/30',
           )}
         >
           {playerNumber}
@@ -47,37 +92,42 @@ function MiniTimelineCard({
           {playerName}
         </span>
       </div>
-      <div className={cn('mt-1', isHome ? 'text-right' : 'text-left')}>
-        <span
-          className={cn(
-            'inline-block rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider',
-            isSuccess && 'bg-success/20 text-success',
-            isError && 'bg-error/20 text-error',
-            !isSuccess && !isError && 'bg-white/10 text-text-muted',
-          )}
-        >
-          {isError ? 'Ошибка' : actionLabel}
-        </span>
+
+      {/* Row 2: action + zone */}
+      <div className={cn('mt-1 text-[9px] text-slate-500', isHome ? 'text-right' : 'text-left')}>
+        {actionName}{zone ? ` · Зона ${zone}` : ''}
+      </div>
+
+      {/* Row 3: result badge */}
+      <div className={cn('mt-0.5', isHome ? 'text-right' : 'text-left')}>
+        <span className={badgeCn}>{resultLabel}</span>
       </div>
     </div>
   )
 }
 
-// ─── Mini Score Pin ─────────────────────────────────────────────
+// ─── Rally Score Separator ───────────────────────────────────────
 
-function MiniScorePin({ scoreHome, scoreAway, isHomePoint }: { scoreHome: number; scoreAway: number; isHomePoint: boolean }) {
+function RallyScoreSeparator({ scoreHome, scoreAway, isHomePoint }: {
+  scoreHome: number
+  scoreAway: number
+  isHomePoint: boolean
+}) {
   return (
-    <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+    <div className="flex items-center justify-center py-2 relative">
+      <div className={cn(
+        'absolute inset-x-0 top-1/2 h-px',
+        isHomePoint ? 'bg-primary/30' : 'bg-pink-500/30',
+      )} />
       <div
         className={cn(
-          'rounded-full px-2 py-0.5 text-[9px] font-bold',
-          'bg-background border',
+          'relative z-10 rounded-full px-4 py-1 text-sm font-black border-2',
           isHomePoint
-            ? 'border-primary/40 text-primary shadow-[0_0_12px_rgba(60,131,246,0.3)]'
-            : 'border-white/20 text-slate-300',
+            ? 'border-primary bg-background text-primary shadow-[0_0_16px_rgba(60,131,246,0.4)]'
+            : 'border-pink-500 bg-background text-pink-400 shadow-[0_0_16px_rgba(236,72,153,0.4)]',
         )}
       >
-        {scoreHome}:{scoreAway}
+        {scoreHome} : {scoreAway}
       </div>
     </div>
   )
@@ -85,45 +135,25 @@ function MiniScorePin({ scoreHome, scoreAway, isHomePoint }: { scoreHome: number
 
 // ─── Helpers ────────────────────────────────────────────────────
 
-function getQualityLabel(event: MatchEvent): string {
-  const q = event.meta?.quality
-  if (!q) return ''
-  const labels: Record<string, string> = {
-    ace: 'Эйс',
-    pressure: 'Услож',
-    in_play: 'В игру',
-    serve_error: 'Ош.подачи',
-    excellent: '++',
-    positive: '+',
-    ok: '!',
-    negative: '−',
-    over: '/',
-    half: '=',
-    reception_error: 'Ош.приёма',
-    attack_error: 'Ош.атаки',
-    net_error: 'Другая ош.',
-    out_error: 'Аут',
-    attack_blocked: 'Уд.в блок',
-    block_error: 'Ош.блока',
-    defense_error: 'Ош.защиты',
-    setting_error: 'Ош.передачи',
-  }
-  return labels[q] || q
-}
-
 // ─── Main Component ─────────────────────────────────────────────
+
+type FeedItem =
+  | { type: 'event'; event: MatchEvent }
+  | { type: 'separator'; scoreHome: number; scoreAway: number; isHomePoint: boolean; id: string }
 
 export function EventFeed({
   events,
   homeTeam,
   awayTeam,
   homeTeamId,
-  maxEvents = 10,
+  homeLineup,
+  maxEvents = 20,
 }: {
   events: MatchEvent[]
   homeTeam: Team | undefined
   awayTeam: Team | undefined
   homeTeamId: string
+  homeLineup?: LineupEntry[]
   maxEvents?: number
 }) {
   const recentEvents = useMemo(() => {
@@ -133,17 +163,48 @@ export function EventFeed({
       .reverse()
   }, [events, maxEvents])
 
-  const getPlayerInfo = (teamId: string, playerId: string): { name: string; number: string } => {
+  const feedItems = useMemo((): FeedItem[] => {
+    const items: FeedItem[] = []
+    let currentRallyId: string | undefined
+    let lastScoringEvent: MatchEvent | null = null
+
+    for (const event of recentEvents) {
+      const rid = event.rallyId
+      // Rally boundary: insert score separator when rally changes
+      if (rid && currentRallyId && rid !== currentRallyId && lastScoringEvent) {
+        const homeScored =
+          (lastScoringEvent.teamId === homeTeamId && lastScoringEvent.result === 'success') ||
+          (lastScoringEvent.teamId !== homeTeamId && lastScoringEvent.result === 'error')
+        items.push({
+          type: 'separator',
+          scoreHome: lastScoringEvent.scoreHome,
+          scoreAway: lastScoringEvent.scoreAway,
+          isHomePoint: homeScored,
+          id: `sep-${currentRallyId}`,
+        })
+        lastScoringEvent = null
+      }
+      if (rid) currentRallyId = rid
+      if (event.result === 'success' || event.result === 'error') lastScoringEvent = event
+      items.push({ type: 'event', event })
+    }
+
+    return items
+  }, [recentEvents, homeTeamId])
+
+  const getPlayerInfo = (teamId: string, playerId: string): { name: string; number: string; zone?: number } => {
     if (playerId === 'opponent-error') return { name: 'Соперник', number: '??' }
     if (isAwayPlayerId(playerId)) {
       const name = getAwayPlayerDisplayName(playerId)
       const m = playerId.match(/\d+/)
       return { name, number: m ? m[0] : '?' }
     }
-    const team = teamId === homeTeamId ? homeTeam : awayTeam
+    const isHome = teamId === homeTeamId
+    const team = isHome ? homeTeam : awayTeam
     const player = team?.players.find((p) => p.id === playerId)
     if (!player) return { name: '?', number: '?' }
-    return { name: player.lastName, number: String(player.number).padStart(2, '0') }
+    const zone = isHome ? homeLineup?.find((e) => e.playerId === playerId)?.zone : undefined
+    return { name: player.lastName, number: String(player.number).padStart(2, '0'), zone }
   }
 
   if (recentEvents.length === 0) {
@@ -174,33 +235,25 @@ export function EventFeed({
           }}
         />
 
-        <div className="space-y-4 relative">
-          {recentEvents.map((event, idx) => {
-            const isHome = event.teamId === homeTeamId
-            const info = getPlayerInfo(event.teamId, event.playerId)
-            const isScoring = event.result === 'success' || event.result === 'error'
-
-            // Check if score changed from previous event
-            let showScorePin = false
-            if (isScoring) {
-              let prevScore = { home: 0, away: 0 }
-              for (let j = idx + 1; j < recentEvents.length; j++) {
-                const prev = recentEvents[j]
-                if (prev) {
-                  prevScore = { home: prev.scoreHome, away: prev.scoreAway }
-                  break
-                }
-              }
-              showScorePin = event.scoreHome !== prevScore.home || event.scoreAway !== prevScore.away
+        <div className="space-y-2 relative">
+          {feedItems.map((item) => {
+            if (item.type === 'separator') {
+              return (
+                <RallyScoreSeparator
+                  key={item.id}
+                  scoreHome={item.scoreHome}
+                  scoreAway={item.scoreAway}
+                  isHomePoint={item.isHomePoint}
+                />
+              )
             }
 
-            const isHomePoint = showScorePin && (
-              (isHome && event.result === 'success') ||
-              (!isHome && event.result === 'error')
-            )
+            const event = item.event
+            const isHome = event.teamId === homeTeamId
+            const info = getPlayerInfo(event.teamId, event.playerId)
 
             return (
-              <div key={event.id} className="relative grid grid-cols-2 gap-4 items-center">
+              <div key={event.id} className="grid grid-cols-2 gap-4 items-center">
                 {/* Left (home) */}
                 <div className={cn(!isHome && 'invisible')}>
                   {isHome && (
@@ -209,6 +262,7 @@ export function EventFeed({
                       playerName={info.name}
                       playerNumber={info.number}
                       isHome={true}
+                      zone={info.zone}
                     />
                   )}
                 </div>
@@ -224,15 +278,6 @@ export function EventFeed({
                     />
                   )}
                 </div>
-
-                {/* Score pin */}
-                {showScorePin && (
-                  <MiniScorePin
-                    scoreHome={event.scoreHome}
-                    scoreAway={event.scoreAway}
-                    isHomePoint={isHomePoint}
-                  />
-                )}
               </div>
             )
           })}

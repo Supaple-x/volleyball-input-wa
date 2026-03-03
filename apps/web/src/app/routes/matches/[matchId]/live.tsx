@@ -309,7 +309,7 @@ function LiberoControl({
     liberoIds.some((id) => id !== currentId && match.homeLineup.some((e) => e.playerId === id))
 
   return (
-    <div className="mx-3 space-y-2">
+    <div className="space-y-2">
       {liberoIds.map((liberoId) => {
         const liberoPlayer = homeTeam.players.find((p) => p.id === liberoId)
         if (!liberoPlayer) return null
@@ -746,18 +746,57 @@ export function LiveMatchPage() {
           onPlayerAction={handlePlayerAction}
         />
 
-        {/* Libero Control */}
-        <LiberoControl
-          match={match}
-          homeTeam={homeTeam}
-          isHomeServing={servingTeamId === match.homeTeamId}
-          onSwapIn={handleLiberoIn}
-          onSwapOut={handleLiberoOut}
-        />
+        {/* Bench area: two columns matching court layout */}
+        {(() => {
+          const liberoIds = getLiberoIds(match)
+          const homeLineupIds = new Set(match.homeLineup.map((e) => e.playerId))
+          const homeBench = (homeTeam?.players ?? []).filter(
+            (p) => !homeLineupIds.has(p.id) && !liberoIds.includes(p.id),
+          )
+          const hasLibero = liberoIds.length > 0 && homeTeam
+          const hasBench = homeBench.length > 0
+          if (!hasLibero && !hasBench) return null
+          return (
+            <div className="grid grid-cols-2 gap-3 px-3">
+              {/* Home side: libero + bench */}
+              <div className="space-y-2">
+                {hasLibero && (
+                  <LiberoControl
+                    match={match}
+                    homeTeam={homeTeam}
+                    isHomeServing={servingTeamId === match.homeTeamId}
+                    onSwapIn={handleLiberoIn}
+                    onSwapOut={handleLiberoOut}
+                  />
+                )}
+                {hasBench && (
+                  <div className="rounded-xl border border-border bg-white/[0.02] p-2">
+                    <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-text-muted">
+                      Скамейка
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {homeBench.map((p) => (
+                        <div
+                          key={p.id}
+                          className="flex items-center gap-1 rounded-lg bg-white/5 px-2 py-1"
+                        >
+                          <span className="text-[10px] font-bold text-primary">#{p.number}</span>
+                          <span className="text-[10px] text-text-muted">{p.lastName}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* Away side: empty placeholder */}
+              <div />
+            </div>
+          )
+        })()}
 
         {/* Start Rally button (when idle) */}
         {rallyPhase === 'idle' && !currentRally && match.status === 'live' && !setIsWon && (
-          <div className="px-3 space-y-2">
+          <div className="px-3">
             <button
               onClick={() => {
                 beginRally()
@@ -782,24 +821,6 @@ export function LiveMatchPage() {
             >
               Начать розыгрыш
             </button>
-            <button
-              onClick={handleOpponentError}
-              className="w-full rounded-xl border border-warning/40 bg-warning/10 py-2.5 text-xs font-semibold text-warning transition active:scale-[0.98] active:bg-warning/20"
-            >
-              Ошибка соперника +1
-            </button>
-          </div>
-        )}
-
-        {/* Opponent error button during in_play */}
-        {rallyPhase === 'in_play' && (
-          <div className="px-3">
-            <button
-              onClick={handleOpponentError}
-              className="w-full rounded-xl border border-warning/30 bg-warning/10 py-2 text-[11px] font-semibold text-warning transition-all active:scale-[0.98]"
-            >
-              Ошибка соперника +1
-            </button>
           </div>
         )}
 
@@ -809,6 +830,7 @@ export function LiveMatchPage() {
           homeTeam={homeTeam}
           awayTeam={awayTeam}
           homeTeamId={match.homeTeamId}
+          homeLineup={match.homeLineup}
         />
       </div>
 

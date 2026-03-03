@@ -46,9 +46,9 @@ function PlayerPickerModal({
   const available = players.filter((p) => !assignedIds.has(p.id) && p.position !== 'libero')
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" onClick={onClose}>
       <div
-        className="w-full max-w-lg rounded-t-3xl border border-border bg-surface p-4 pb-safe"
+        className="w-full max-w-lg rounded-2xl border border-border bg-surface p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">

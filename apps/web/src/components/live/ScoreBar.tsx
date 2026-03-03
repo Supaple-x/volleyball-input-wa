@@ -128,40 +128,38 @@ export function ScoreBar({
       {/* Live stats grid */}
       <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 pb-2 text-[11px] tabular-nums">
         {/* Подача */}
-        <div className="flex justify-end gap-1.5">
-          <span className="text-text-muted/60">{stats.home.serveTotal}</span>
-          <span className="text-success">{stats.home.aces}э</span>
-          <span className="text-text-muted">{stats.home.servePressure}у</span>
-          <span className="text-error">{stats.home.serveErrors}о</span>
+        <div className="flex justify-end gap-1.5 flex-wrap">
+          <span className="text-success">{stats.home.aces} эйс</span>
+          <span className="text-text-muted">{stats.home.servePressure} услож</span>
+          <span className="text-error">{stats.home.serveErrors} ошиб</span>
         </div>
-        <span className="text-[10px] text-text-muted/60 font-medium">Под</span>
-        <div className="flex gap-1.5">
-          <span className="text-text-muted/60">{stats.away.serveTotal}</span>
-          <span className="text-success">{stats.away.aces}э</span>
-          <span className="text-text-muted">{stats.away.servePressure}у</span>
-          <span className="text-error">{stats.away.serveErrors}о</span>
+        <span className="text-[10px] text-text-muted/60 font-medium">Подача</span>
+        <div className="flex gap-1.5 flex-wrap">
+          <span className="text-success">{stats.away.aces} эйс</span>
+          <span className="text-text-muted">{stats.away.servePressure} услож</span>
+          <span className="text-error">{stats.away.serveErrors} ошиб</span>
         </div>
 
         {/* Атака */}
         <div className="flex justify-end gap-1.5">
-          <span className="text-success">{stats.home.attackPlus}+</span>
-          <span className="text-error">{stats.home.attackMinus}−</span>
+          <span className="text-success">{stats.home.attackPlus} очк</span>
+          <span className="text-error">{stats.home.attackMinus} ошиб</span>
         </div>
-        <span className="text-[10px] text-text-muted/60 font-medium">Ата</span>
+        <span className="text-[10px] text-text-muted/60 font-medium">Атака</span>
         <div className="flex gap-1.5">
-          <span className="text-success">{stats.away.attackPlus}+</span>
-          <span className="text-error">{stats.away.attackMinus}−</span>
+          <span className="text-success">{stats.away.attackPlus} очк</span>
+          <span className="text-error">{stats.away.attackMinus} ошиб</span>
         </div>
 
         {/* Блок */}
         <div className="flex justify-end gap-1.5">
-          <span className="text-success">{stats.home.blockPlus}+</span>
-          <span className="text-error">{stats.home.blockMinus}−</span>
+          <span className="text-success">{stats.home.blockPlus} очк</span>
+          <span className="text-error">{stats.home.blockMinus} ошиб</span>
         </div>
-        <span className="text-[10px] text-text-muted/60 font-medium">Бло</span>
+        <span className="text-[10px] text-text-muted/60 font-medium">Блок</span>
         <div className="flex gap-1.5">
-          <span className="text-success">{stats.away.blockPlus}+</span>
-          <span className="text-error">{stats.away.blockMinus}−</span>
+          <span className="text-success">{stats.away.blockPlus} очк</span>
+          <span className="text-error">{stats.away.blockMinus} ошиб</span>
         </div>
 
         {/* Приём */}
@@ -170,7 +168,7 @@ export function ScoreBar({
             {stats.home.receptionPct !== null ? `${stats.home.receptionGood}/${stats.home.receptionTotal} ${stats.home.receptionPct}%` : '—'}
           </span>
         </div>
-        <span className="text-[10px] text-text-muted/60 font-medium">Пр</span>
+        <span className="text-[10px] text-text-muted/60 font-medium">Приём</span>
         <div className="flex gap-1.5">
           <span className={stats.away.receptionPct !== null ? 'text-warning' : 'text-text-muted/40'}>
             {stats.away.receptionPct !== null ? `${stats.away.receptionGood}/${stats.away.receptionTotal} ${stats.away.receptionPct}%` : '—'}
