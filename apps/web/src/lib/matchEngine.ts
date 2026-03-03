@@ -474,8 +474,6 @@ export function getAvailableActions(
           {
             title: 'Подача',
             actions: [
-              { action: 'serve', result: 'success', quality: 'ace', label: 'Эйс', variant: 'success' },
-              { action: 'serve', result: 'neutral', quality: 'pressure', label: 'Услож', variant: 'neutral' },
               { action: 'serve', result: 'neutral', quality: 'in_play', label: 'В игру', variant: 'neutral' },
               { action: 'serve', result: 'error', quality: 'serve_error', label: 'Ошиб', variant: 'error' },
             ],
@@ -647,7 +645,7 @@ export function getAwayAvailableActions(
           {
             title: 'Приём',
             actions: [
-              { action: 'reception', result: 'neutral', quality: 'ok', label: '+', variant: 'success' },
+              { action: 'reception', result: 'neutral', quality: 'positive', label: '+', variant: 'success' },
               { action: 'reception', result: 'neutral', quality: 'negative', label: '0', variant: 'neutral' },
               { action: 'reception', result: 'error', quality: 'reception_error', label: 'Ошиб', variant: 'error' },
             ],
